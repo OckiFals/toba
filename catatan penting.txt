@@ -1,0 +1,12 @@
+** Penggantian nama semua model
+Karena keterbatasan pada framework CI yang tidak memperbolehkan penggunaan nama class model
+menggunakan camel-style(NamaModel), maka digunakanlah underscore '_' untuk memisahkan antara nama dan sterotypenya
+
+Contoh:
+AccountModel menjadi Account_model
+
+** Penggantian nama method print() pada controller Ticket
+Karena keterbatasan pada framework CI yang hanya menggunakan satu namespace(package dalam java) yaitu global namespace, membuat penggunaan method print() menjadi tidak mungkin, mengingat print() merupakan method standar PHP
+untuk mencetak data non objek.   
+
+Sehingga mengharuskan penggantian nama method tersebut menjadi export_pdf()
