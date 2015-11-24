@@ -56,7 +56,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['login-rahasia'] = 'Site/login';
 $route['logout-rahasia'] = 'Site/logout';
 $route['search'] = 'Site/search';
-$route['pemesanan'] = 'Site/reservation';
+$route['pemesanan'] = 'Reservation/add';
 
 $route['konfirmasi-pembayaran'] = 'Reservation/confirmation';
 
