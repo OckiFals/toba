@@ -133,9 +133,4 @@ class Site extends CI_Controller {
 
         echo json_encode($data);
     }
-
-    public function reservation() {
-        $this->load->view('reservation');
-    }
-
 }
