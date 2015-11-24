@@ -6,10 +6,6 @@ class BusModel extends CI_Model {
         
     }
 
-    public function search() {
-        
-    }
-
     public function create() {
         
     }
