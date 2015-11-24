@@ -54,8 +54,13 @@ class Account extends CI_Controller {
 
             # jika akun dengan id tersebut belum ada
             if (null === $account) {
-                $this->Account_model->create();
+                // $this->Account_model->create();
+            } else {
+
             }
+
+            # arahkan kembali ke /account
+            redirect(base_url('account'), 'refresh');
         } else {
             $this->load->view('accounts/add-account');
         }

@@ -27,8 +27,28 @@
                             <!-- /.box-header -->
 
                             <div class="box-body">
-                                <form role="form">
+                                <form role="form" action="" method="POST">
                                     <div class="box-body">
+                                        <div class="table-responsive">
+                                            <p class="lead">Informasi Tiket</p>
+                                            <table class="table">
+                                                <tbody>
+                                                  <tr>
+                                                    <th style="width: 50%">Tujuan</th>
+                                                    <td>Jakarta</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <th>Bus</th>
+                                                    <td>Kuncoro</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <th>Waktu Keberangkatan</th>
+                                                    <td>735-845-642</td>
+                                                  </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
                                         <div class="form-group">
                                             <label for="ticket_count">Jumlah tiket</label>
                                             <select class="form-control" id="ticket_count" name="ticket_count">
@@ -178,7 +198,18 @@
                                     <!-- /.box-body -->
 
                                     <div class="box-footer">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                                        <div class="row">
+                                            <div class="col-md-11 col-xs-8">
+
+                                            </div>
+                                            <!-- /.col -->
+                                            <div class="col-md-1 col-xs-4">
+                                                <button type="submit" class="btn btn-primary btn-block">Submit
+                                                </button>
+                                            </div>
+                                            <!-- /.col -->
+                                        </div>
                                     </div>
                                 </form>
                             </div>
@@ -204,6 +235,10 @@
 <script src="<?php echo base_url('assets/bootstrap/js/bootstrap.min.js') ?>" type="text/javascript"></script>
 <!-- AdminLTE App -->
 <script src="<?php echo base_url('assets/dist/js/app.min.js') ?>" type="text/javascript"></script>
+<!-- jquery.inputmask -->
+<script src="<?php echo base_url('assets/plugins/input-mask/jquery.inputmask.js') ?>" type="text/javascript"></script>
+<script src="<?php echo base_url('assets/plugins/input-mask/jquery.inputmask.date.extensions.js') ?>" type="text/javascript"></script>
+<script src="<?php echo base_url('assets/plugins/input-mask/jquery.inputmask.extensions.js') ?>" type="text/javascript"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {

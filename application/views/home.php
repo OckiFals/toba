@@ -44,7 +44,7 @@
                                 </div>
                                 
                                 <label class="radio-inline">
-                                    <input type="radio" name="type" value="eksekutif" checked>Semua Kelas
+                                    <input type="radio" name="type" value="semua" checked>Semua Kelas
                                 </label>
                                 <label class="radio-inline">
                                     <input type="radio" name="type" value="eksekutif">Eksekutif
@@ -144,20 +144,31 @@
 
         });
 
-        var states = [
-            'Bali', 'Jogjakarta', 'Madura', 'Semarang', 'Solo',
-                'Bekasi', 'Jakarta', 'Bandung', 'Pekalongan'
-        ];
+        $.ajax({
+            url: 'destination',
+            beforeSend: function( xhr ) {
+                xhr.overrideMimeType( "application/json; charset=x-user-defined" );
+            },
+            success: function(data) {
 
-        input_search.autocomplete({
-            source: [states]
+                var states = [];
+
+                $.each(data, function(index, destination) {
+                    states[index] = destination.region;
+                });
+
+                input_search.autocomplete({
+                    source: [states]
+                });
+
+                input_search.focus();
+            }
         });
-
-        input_search.focus();
 
         function showBusContent() {
             $.ajax({
                 url: 'search',
+                data: input_search.val() + '&' + date.val() + '&' + $('form input[type=radio]:checked').val(),
                 beforeSend: function( xhr ) {
                     xhr.overrideMimeType( "application/json; charset=x-user-defined" );
                 }
