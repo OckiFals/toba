@@ -27,7 +27,7 @@
             <div class="alert alert-info alert-dismissable" id="flash-message" style="display: none">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <h4><i class="icon fa fa-check-square-o"></i> Info</h4>
-                <span id="flash-message-data">Data berhasil dihapus!</span>
+                <span id="flash-message-data"></span>
             </div>
             <!-- /flash message -->
 
@@ -154,17 +154,22 @@
         $(document).ready(function () {
             var bus_table = $('#bus-list').DataTable();
             var load_indicator = $('#load-animate');
+            var confirm_modal = $('#confirm-delete');
+            var flash_message = $('#flash-message');
 
-            // example data
+            // iterasi stdClass data ke dalam object javascript
             var data = [
+                <?php foreach($buses as $index => $bus): ?>
                 {
-                    id: '1',
-                    po: 'Rosalia Indah',
+                    id: <?php echo "'{$bus->id}'" ?>,
+                    po: <?php echo "'{$bus->po}'" ?>,
                     img: 'img/accounts/moon.png',
-                    name: 'Kembar Jaya',
-                    destination: 'Jogjakarta',
-                    class: 'Eksekutif'
-                }
+                    name: <?php echo "'{$bus->bus_name}'" ?>,
+                    destination: <?php echo "'{$bus->destination_display}'" ?>,
+                    class: <?php echo ('1' === $bus->class) ? "'Eksekutif'" : 
+                        (('2' === $bus->class) ? "'Bisnis'" : "'Ekonomi'") ?>
+                },
+                <?php endforeach; ?>
             ];
 
             window.setTimeout(function () {
@@ -178,9 +183,9 @@
                         // col 1
                         obj.id,
                             // col 2
-                        ' <img src="<?php echo base_url('assets') ?>/' + obj.img + ' " alt="account image" ' +
+                        ' <img src="<?php echo base_url('assets') ?>/' + obj.img + ' " alt="bus image" ' +
                         ' class="img-responsive img-circle center-block" width="40px" height="40px"/> ' +
-                        ' <span id="account-' + obj.id + '" style="text-align: center" class="center-block"> ' + obj.po + '</span> ',
+                        ' <span id="bus-' + obj.id + '" style="text-align: center" class="center-block"> ' + obj.po + '</span> ',
                         // col 3
                         obj.name,
                         // col 4
@@ -193,8 +198,8 @@
                         ' <a href="#" class="btn btn-xs btn-flat btn-primary"> ' +
                             ' <i class="fa fa-edit "></i> Ubah ' +
                         ' </a> ' + "\n" +
-                        ' <a href="#" class="btn btn-xs btn-flat btn-danger" data-account-id="' + obj.id + '" ' +
-                            ' data-type-modal="Bus" data-account-name=" ' + obj.name + ' " ' +
+                        ' <a href="#" class="btn btn-xs btn-flat btn-danger" data-bus-id="' + obj.id + '" ' +
+                            ' data-type-modal="Bus" data-bus-name=" ' + obj.name + ' " ' +
                             ' data-toggle="modal" data-href="#"' +
                             ' data-target="#confirm-delete">' + 
                             '<i class="fa fa-trash-o"></i> Hapus' + 
@@ -203,20 +208,49 @@
                 });
             }
 
+            function hideFlashMessage(){
+                flash_message.fadeOut('normal');
+            }
+
             //The Calender
             $("#calendar").datepicker('setDate', 'today');
 
-            $('#confirm-delete').on('show.bs.modal', function (e) {
-                var button = $(e.relatedTarget); 
-                var type = button.data('type-modal'); 
-                var id = button.data('account-id'); 
-                var title = button.data('account-name'); 
+            var btn_target;
+            confirm_modal.on('show.bs.modal', function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var type = button.data('type-modal'); // Extract post id from data-name attribute
+                var id = button.data('bus-id'); // Extract post id from data-name attribute
+                var title = button.data('bus-name'); // Extract post id from data-name attribute
+
+                btn_target = button;
 
                 var modal = $(this);
                 modal.find('#order-id').text(id);
                 modal.find('#type-modal').text(type);
                 modal.find('#order-name').text(title);
 
+                // $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+            });
+
+            confirm_modal.find('.btn-ok').click(function (e) {
+                var target = '#bus-' + btn_target.data('bus-id');
+                
+                $.ajax({
+                    url: 'bus/delete',
+                    data: {id: btn_target.data('bus-id')} 
+                }).done(function(msg) {
+                    flash_message.find('#flash-message-data').html(msg);
+                    flash_message.fadeIn('normal')
+                    window.setTimeout( hideFlashMessage, 4000);
+
+                    bus_table
+                        .row($(target).parent().parent())
+                        .remove()
+                        .draw();
+                });
+
+
+                confirm_modal.modal('hide');
             });
         });
     </script>

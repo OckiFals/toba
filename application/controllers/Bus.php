@@ -2,6 +2,11 @@
 
 class Bus extends CI_Controller {
 
+    public function __construct() {
+        parent::__construct();
+        $this->load->model('Bus_model');
+    }
+
     /**
      * Halaman kelola bus
      * Pada halaman ini semua bus yang ada
@@ -12,7 +17,8 @@ class Bus extends CI_Controller {
      * @route: /bus
      */
     public function index() {
-        $this->load->view('buses/bus-all');
+        $buses = $this->Bus_model->getAll();
+        $this->load->view('buses/bus-all', ['buses' => $buses]);
     }
 
     /**
@@ -39,7 +45,7 @@ class Bus extends CI_Controller {
     }
 
     public function delete() {
-        
+  
     }
 
 }
