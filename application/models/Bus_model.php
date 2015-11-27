@@ -1,6 +1,6 @@
 <?php
 
-class BusModel extends CI_Model {
+class Bus_model extends CI_Model {
 
     public function getAll() {
         

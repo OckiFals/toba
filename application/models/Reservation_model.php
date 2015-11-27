@@ -1,6 +1,6 @@
 <?php
 
-class ReservationModel extends CI_Model {
+class Reservation_model extends CI_Model {
 
 	public function __construct() {
         parent::__construct();

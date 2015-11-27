@@ -1,6 +1,6 @@
 <?php
 
-class TicketModel extends CI_Model {
+class Ticket_model extends CI_Model {
 
     public function create($name, $identity, $birth) {
         

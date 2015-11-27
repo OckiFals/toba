@@ -1,5 +1,5 @@
 <?php
-class PaymentModel extends CI_Model{
+class Payment_model extends CI_Model{
     public function getAll(){
         
     }

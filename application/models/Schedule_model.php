@@ -1,6 +1,6 @@
 <?php
 
-class ScheduleModel extends CI_Model {
+class Schedule_model extends CI_Model {
 
     public function getAll() {
         
