@@ -13,6 +13,15 @@ class Destination extends CI_Controller {
      * @route: /destination
      */
     public function index() {
+        echo json_encode($this->Destination_model->getAll());
+    }
+
+    /**
+     * Mencetak kota yang berelasi dengan bus dalam bentuk JSON
+     * @target: all
+     * @route: /destination/busjoin
+     */
+    public function busJoin() {
         echo json_encode($this->Destination_model->getBusJoin());
     }
 

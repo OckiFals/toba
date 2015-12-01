@@ -145,7 +145,7 @@
         });
 
         $.ajax({
-            url: 'destination',
+            url: 'destination/busjoin',
             beforeSend: function( xhr ) {
                 xhr.overrideMimeType( "application/json; charset=x-user-defined" );
             },
