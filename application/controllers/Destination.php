@@ -13,7 +13,7 @@ class Destination extends CI_Controller {
      * @route: /destination
      */
     public function index() {
-        echo json_encode($this->Destination_model->getAll());
+        echo json_encode($this->Destination_model->getBusJoin());
     }
 
 }
