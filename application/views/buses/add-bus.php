@@ -38,15 +38,38 @@
                                 <form action="" method="POST" enctype="multipart/form-data" id="bus-form" novalidate="novalidate">
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                                        <input id="po" name="po" class="form-control" placeholder="Nama PO" type="text">
+                                        <select class="form-control" id="po" name="po">
+                                            <option value="">Pilih PO</option>
+                                            <?php foreach ($po as $index => $value): ?>
+                                            <option value="<?php echo $value->id ?>"><?php echo $value->name ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+
                                     </div>
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-road form-control-feedback"></span>
                                         <input id="bus" name="bus" class="form-control" placeholder="Nama Bus" type="text">
                                     </div>
                                     <div class="form-group has-feedback">
-                                        <span class="glyphicon glyphicon-forward form-control-feedback"></span>
+                                        <span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
                                         <input id="destination" class="form-control" placeholder="Tujuan" name="destination" type="text">
+                                    </div>
+                                    <div class="form-group has-feedback">
+                                        <span class="glyphicon glyphicon-star form-control-feedback"></span>
+                                        <select class="form-control" id="class" name="class">
+                                        <option value="">Pilih Kelas</option>
+                                            <option value="1">Kelas: Eksekutif</option>
+                                            <option value="2">Kelas: Bisnis</option>
+                                            <option value="3">Kelas: Ekonomi</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group has-feedback">
+                                        <span class="glyphicon glyphicon-plus-sign form-control-feedback"></span>
+                                        <input id="capacity" class="form-control" placeholder="Kapasitas Penumpang" name="capacity" type="text">
+                                    </div>
+                                    <div class="form-group has-feedback">
+                                        <span class="glyphicon glyphicon-usd form-control-feedback"></span>
+                                        <input id="ticket_price" class="form-control" placeholder="Harga Tiket" name="ticket_price" type="text">
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-8">
@@ -111,6 +134,10 @@
     <script src="<?php echo base_url('assets/dist/js/app.min.js') ?>" type="text/javascript"></script>
     <!-- datepicker -->
     <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>" type="text/javascript"></script>
+    <!-- autocomplete plugins JS -->
+    <script src="<?php echo base_url('assets/plugins/autocomplete/jquery.autocomplete.js') ?>" type="text/javascript"></script>
+    <!-- autocomplete plugins JS -->
+    <link href="<?php echo base_url('assets/plugins/autocomplete/jquery.autocomplete.css') ?>" rel="stylesheet" type="text/css"/>
     <!-- JQuery Validate -->
     <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>" type="text/javascript"></script>
 
@@ -119,20 +146,70 @@
             //The Calender
             $("#calendar").datepicker('setDate', 'today');
 
+            var dest_states = [];
+
+            $.ajax({
+                url: '../destination',
+                beforeSend: function( xhr ) {
+                    xhr.overrideMimeType( "application/json; charset=x-user-defined" );
+                },
+                success: function(data) {
+
+                    $.each(data, function(index, destination) {
+                        dest_states[index] = destination.region + ' (' + destination.alias.toUpperCase() + ')';
+                    });
+
+                    $('#destination').autocomplete({
+                        source: [dest_states]
+                    });
+
+                }
+            });
+
             $("#bus-form").validate({
 
                 // Specify the validation rules
                 rules: {
                     po: "required",
-                    bus: "required",
-                    destination: "required"
+                    bus: {
+                        required: true,
+                        rangelength: [4, 16]
+                    },
+                    destination: "required",
+                    class: {
+                        required: true,
+                        range: [1, 3]
+                    },
+                    capacity: {
+                        required: true,
+                        range: [16, 100]
+                    },
+                    ticket_price: {
+                        required: true,
+                        digits: true
+                    }
                 },
 
                 // Specify the validation error messages
                 messages: {
-                    po: "Tolong ketikkan nama PO",
-                    bus: "Tolong ketikkan nama bus",
-                    destination: "Tolong ketikkan tujuan"
+                    po: "Tolong pilih PO",
+                    bus: {
+                        required: "Tolong ketikkan nama bus",
+                        rangelength: "Jumlah karakter harus berada diantara 4 dan 16"
+                    },
+                    destination: "Tolong ketikkan tujuan",
+                    class: {
+                        required: "Tolong pilih kelas",
+                        range: "Kelas tidak valid"
+                    },
+                    capacity: {
+                        required: "Tolong ketikkan kapasitas penumpang",
+                        range: "Jumlah kursi tidak valid, harus diantara 16 dan 100"
+                    },
+                    ticket_price: {
+                        required: "Tolong ketikkan harga tiket",
+                        digits: "Haruslah berupa angka"
+                    }
                 },
 
                 submitHandler: function (form) {

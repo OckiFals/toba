@@ -5,6 +5,7 @@ class Bus extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('Bus_model');
+        $this->load->model('Po_model');
     }
 
     /**
@@ -32,7 +33,8 @@ class Bus extends CI_Controller {
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
             # taruh kode disini
         } else {
-            $this->load->view('buses/add-bus');
+            $po = $this->Po_model->getAll();
+            $this->load->view('buses/add-bus', ['po' => $po]);
         }
     }
     
