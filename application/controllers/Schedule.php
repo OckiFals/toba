@@ -2,6 +2,11 @@
 
 class Schedule extends CI_Controller{
 
+    public function __construct() {
+        parent::__construct();
+        $this->load->model('Bus_model');
+    }
+
     /**
      * Halaman kelola jadwal
      * Pada halaman ini semua jadwal yang ada
@@ -26,7 +31,8 @@ class Schedule extends CI_Controller{
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
             # taruh kode disini
         } else {
-            $this->load->view('schedules/add-schedule');
+            $buses = $this->Bus_model->getAll();
+            $this->load->view('schedules/add-schedule', ['buses' => $buses]);
         }
     }
 
