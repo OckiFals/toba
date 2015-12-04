@@ -6,7 +6,7 @@ class Reservation_model extends CI_Model {
         parent::__construct();
     }
     
-    public function getByBookingCode() {
+    public function getByBookingCode($code) {
         
     }
 

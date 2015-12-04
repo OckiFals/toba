@@ -20,11 +20,11 @@ class Bus_model extends CI_Model {
 
     }
 
-    public function update() {
+    public function update($id) {
         
     }
 
-    public function getByPK() {
+    public function getByPK($id) {
         
     }
 

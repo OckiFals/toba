@@ -7,7 +7,15 @@ class Schedule_model extends CI_Model {
     }
 
     public function getAll() {
-        
+        $query = $this->db->query("SELECT A.*, 
+            B.`po`, B.`bus_name`, B.`destination`, 
+            B.`class`, B.`capacity`, B.`ticket_price` 
+            FROM `schedule` A 
+                INNER JOIN `bus` B 
+                ON A.`bus_id` = B.`id` 
+            ORDER BY B.`po`"
+        );
+        return $query->result();
     }
 
     public function create($bus_id, $dateTime) {
@@ -19,15 +27,15 @@ class Schedule_model extends CI_Model {
         $this->db->insert('schedule', $data);
     }
 
-    public function getByBusname() {
+    public function getByBusname($bus_name) {
         
     }
 
-    public function update() {
+    public function update($id) {
         
     }
 
-    public function delete() {
+    public function delete($id) {
         
     }
 
