@@ -1,5 +1,10 @@
+<?php
+/**
+ * @var stdClass $buses
+ */
+?>
 <?php $this->load->view('header', ['title' => 'Tambah Jadwal Bus']); ?>
-<!-- Content Wrapper. Contains page content -->
+    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
@@ -45,13 +50,13 @@
                                     <div class="form-group has-feedback">
                                         <select class="form-control" id="day" name="day">
                                             <option value="">Pilih Hari Keberangkatan</option>
-                                            <option value="1">Senin</option>
-                                            <option value="2">Selasa</option>
-                                            <option value="3">Rabu</option>
-                                            <option value="4">Kamis</option>
-                                            <option value="5">Jum'at</option>
-                                            <option value="6">Sabtu</option>
-                                            <option value="7">Minggu</option>
+                                            <option value="monday-1">Senin</option>
+                                            <option value="tuesday-2">Selasa</option>
+                                            <option value="wednesday-3">Rabu</option>
+                                            <option value="thursday-4">Kamis</option>
+                                            <option value="friday-5">Jum'at</option>
+                                            <option value="saturday-6">Sabtu</option>
+                                            <option value="sunday-7">Minggu</option>
                                         </select>
                                     </div>
                                     <div class="form-group has-feedback">
@@ -133,23 +138,52 @@
     <!-- AdminLTE App -->
     <script src="<?php echo base_url('assets/dist/js/app.min.js') ?>" type="text/javascript"></script>
     <!-- datepicker -->
-    <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>"
+            type="text/javascript"></script>
     <!-- JQuery Validate -->
-    <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>"
+            type="text/javascript"></script>
+    <!-- autocomplete plugins JS -->
+    <script src="<?php echo base_url('assets/plugins/autocomplete/jquery.autocomplete.js') ?>"
+            type="text/javascript"></script>
+    <!-- autocomplete plugins JS -->
+    <link href="<?php echo base_url('assets/plugins/autocomplete/jquery.autocomplete.css') ?>" rel="stylesheet"
+          type="text/css"/>
     <!-- clock picker plugins JS -->
-    <script src="<?php echo base_url('assets/plugins/clock-time/bootstrap-clockpicker.min.js') ?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/clock-time/bootstrap-clockpicker.min.js') ?>"
+            type="text/javascript"></script>
     <!-- clock picker plugins JS -->
-    <link href="<?php echo base_url('assets/plugins/clock-time/jquery-clockpicker.min.css') ?>" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo base_url('assets/plugins/clock-time/jquery-clockpicker.min.css') ?>" rel="stylesheet"
+          type="text/css"/>
 
     <script type="application/javascript">
         $(document).ready(function () {
             //The Calender
             $("#calendar").datepicker('setDate', 'today');
 
+            var bus_states = [];
+
+            var bus_data = [
+                <?php foreach ($buses as $index => $bus): ?>
+                {
+                    id: <?php echo $bus->id ?>,
+                    name: '<?php echo $bus->bus_name ?>'
+                },
+                <?php endforeach; ?>
+            ];
+
+            $.each(bus_data, function (index, bus) {
+                bus_states[index] = bus.name + ' (ID: ' + bus.id + ')';
+            });
+
+            $('#bus').autocomplete({
+                source: [bus_states]
+            });
+
             $('#time').clockpicker({
                 placement: 'bottom',
                 align: 'left',
-                autoclose: true,
+                autoclose: true
             });
 
             $("#bus-form").validate({

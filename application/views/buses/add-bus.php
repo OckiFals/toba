@@ -1,5 +1,5 @@
 <?php $this->load->view('header', ['title' => 'Tambah Data Bus']); ?>
-<!-- Content Wrapper. Contains page content -->
+    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
@@ -35,29 +35,33 @@
                         <!-- /.box-header -->
                         <div class="box-body">
                             <div class="register-box-body">
-                                <form action="" method="POST" enctype="multipart/form-data" id="bus-form" novalidate="novalidate">
+                                <form action="" method="POST" enctype="multipart/form-data" id="bus-form"
+                                      novalidate="novalidate">
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-user form-control-feedback"></span>
                                         <select class="form-control" id="po" name="po">
                                             <option value="">Pilih PO</option>
                                             <?php foreach ($po as $index => $value): ?>
-                                            <option value="<?php echo $value->id ?>"><?php echo $value->name ?></option>
+                                                <option
+                                                    value="<?php echo $value->id ?>"><?php echo $value->name ?></option>
                                             <?php endforeach; ?>
                                         </select>
 
                                     </div>
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-road form-control-feedback"></span>
-                                        <input id="bus" name="bus" class="form-control" placeholder="Nama Bus" type="text">
+                                        <input id="bus" name="bus" class="form-control" placeholder="Nama Bus"
+                                               type="text">
                                     </div>
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
-                                        <input id="destination" class="form-control" placeholder="Tujuan" name="destination" type="text">
+                                        <input id="destination" class="form-control" placeholder="Tujuan"
+                                               name="destination" type="text">
                                     </div>
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-star form-control-feedback"></span>
                                         <select class="form-control" id="class" name="class">
-                                        <option value="">Pilih Kelas</option>
+                                            <option value="">Pilih Kelas</option>
                                             <option value="1">Kelas: Eksekutif</option>
                                             <option value="2">Kelas: Bisnis</option>
                                             <option value="3">Kelas: Ekonomi</option>
@@ -65,11 +69,13 @@
                                     </div>
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-plus-sign form-control-feedback"></span>
-                                        <input id="capacity" class="form-control" placeholder="Kapasitas Penumpang" name="capacity" type="text">
+                                        <input id="capacity" class="form-control" placeholder="Kapasitas Penumpang"
+                                               name="capacity" type="text">
                                     </div>
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-usd form-control-feedback"></span>
-                                        <input id="ticket_price" class="form-control" placeholder="Harga Tiket" name="ticket_price" type="text">
+                                        <input id="ticket_price" class="form-control" placeholder="Harga Tiket"
+                                               name="ticket_price" type="text">
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-8">
@@ -77,7 +83,8 @@
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-xs-4">
-                                            <button type="submit" class="btn btn-primary btn-block btn-flat">Add</button>
+                                            <button type="submit" class="btn btn-primary btn-block btn-flat">Add
+                                            </button>
                                         </div>
                                         <!-- /.col -->
                                     </div>
@@ -133,13 +140,17 @@
     <!-- AdminLTE App -->
     <script src="<?php echo base_url('assets/dist/js/app.min.js') ?>" type="text/javascript"></script>
     <!-- datepicker -->
-    <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>"
+            type="text/javascript"></script>
     <!-- autocomplete plugins JS -->
-    <script src="<?php echo base_url('assets/plugins/autocomplete/jquery.autocomplete.js') ?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/autocomplete/jquery.autocomplete.js') ?>"
+            type="text/javascript"></script>
     <!-- autocomplete plugins JS -->
-    <link href="<?php echo base_url('assets/plugins/autocomplete/jquery.autocomplete.css') ?>" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo base_url('assets/plugins/autocomplete/jquery.autocomplete.css') ?>" rel="stylesheet"
+          type="text/css"/>
     <!-- JQuery Validate -->
-    <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>"
+            type="text/javascript"></script>
 
     <script type="application/javascript">
         $(document).ready(function () {
@@ -150,12 +161,12 @@
 
             $.ajax({
                 url: '../destination',
-                beforeSend: function( xhr ) {
-                    xhr.overrideMimeType( "application/json; charset=x-user-defined" );
+                beforeSend: function (xhr) {
+                    xhr.overrideMimeType("application/json; charset=x-user-defined");
                 },
-                success: function(data) {
+                success: function (data) {
 
-                    $.each(data, function(index, destination) {
+                    $.each(data, function (index, destination) {
                         dest_states[index] = destination.region + ' (' + destination.alias.toUpperCase() + ')';
                     });
 

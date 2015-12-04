@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var stdClass $po
+ * @var stdClass $buses
+ */
+?>
 <?php $this->load->view('header', ['title' => 'Kelola Bus']); ?>
 <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -166,7 +172,7 @@
                     img: 'img/accounts/moon.png',
                     name: <?php echo "'{$bus->bus_name}'" ?>,
                     destination: <?php echo "'{$bus->destination_display}'" ?>,
-                    class: <?php echo ('1' === $bus->class) ? "'Eksekutif'" : 
+                    'class': <?php echo ('1' === $bus->class) ? "'Eksekutif'" :
                         (('2' === $bus->class) ? "'Bisnis'" : "'Ekonomi'") ?>
                 },
                 <?php endforeach; ?>
@@ -232,7 +238,7 @@
                 // $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
             });
 
-            confirm_modal.find('.btn-ok').click(function (e) {
+            confirm_modal.find('.btn-ok').click(function () {
                 var target = '#bus-' + btn_target.data('bus-id');
                 
                 $.ajax({
@@ -240,7 +246,7 @@
                     data: {id: btn_target.data('bus-id')} 
                 }).done(function(msg) {
                     flash_message.find('#flash-message-data').html(msg);
-                    flash_message.fadeIn('normal')
+                    flash_message.fadeIn('normal');
                     window.setTimeout( hideFlashMessage, 4000);
 
                     bus_table

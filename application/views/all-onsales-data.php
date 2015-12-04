@@ -1,5 +1,5 @@
 <?php $this->load->view('header', ['title' => 'Data Penjualan']); ?>
-<!-- Content Wrapper. Contains page content -->
+    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
@@ -189,11 +189,14 @@
     <!-- ./wrapper -->
     <!-- Sparkline -->
 
-    <script src="<?php echo base_url('assets/plugins/datatables/jquery.dataTables.js') ?>" type="text/javascript"></script>
-    <script src="<?php echo base_url('assets/plugins/datatables/dataTables.bootstrap.js') ?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/datatables/jquery.dataTables.js') ?>"
+            type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/datatables/dataTables.bootstrap.js') ?>"
+            type="text/javascript"></script>
     <script src="<?php echo base_url('assets/plugins/chartjs/Chart.min.js') ?>" type="text/javascript"></script>
     <!-- datepicker -->
-    <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>"
+            type="text/javascript"></script>
 
 
     <script type="text/javascript">

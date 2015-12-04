@@ -1,5 +1,10 @@
+<?php
+/**
+ * @var array $account
+ */
+?>
 <?php $this->load->view('header', ['title' => 'Ubah Akun']) ?>
-<div class="content-wrapper">
+    <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
@@ -36,30 +41,40 @@
                             <div class="box-body">
                                 <div class="register-box-body">
                                     <p class="login-box-msg">Ubah Data Akun <?php echo $account['id']; ?></p>
+
                                     <form action="" method="POST" id="update-form" novalidate="novalidate">
                                         <div class="form-group has-feedback">
                                             <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                                            <input id="name" name="name" class="form-control" placeholder="Nama Lengkap" type="text" value="<?php echo $account['name']; ?>">
+                                            <input id="name" name="name" class="form-control" placeholder="Nama Lengkap"
+                                                   type="text" value="<?php echo $account['name']; ?>">
                                         </div>
                                         <div class="form-group has-feedback">
                                             <span class="glyphicon glyphicon-credit-card form-control-feedback"></span>
-                                            <input id="id" name="id" class="form-control" placeholder="ID" 
-                                                type="text" value="<?php echo $account['id'] ?>">
+                                            <input id="id" name="id" class="form-control" placeholder="ID"
+                                                   type="text" value="<?php echo $account['id'] ?>">
                                         </div>
                                         <div class="form-group has-feedback">
                                             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                                            <input id="password" class="form-control" placeholder="Password" name="password" type="password" >
+                                            <input id="password" class="form-control" placeholder="Password"
+                                                   name="password" type="password">
                                         </div>
                                         <div class="form-group has-feedback">
                                             <span class="glyphicon glyphicon-repeat form-control-feedback"></span>
-                                            <input id="password2" class="form-control" placeholder="Tulis Ulang Password" name="password2" type="password">
+                                            <input id="password2" class="form-control"
+                                                   placeholder="Tulis Ulang Password" name="password2" type="password">
                                         </div>
                                         <div class="form-group has-feedback">
                                             <select class="form-control" id="type" name="type"
-                                                value="<?php echo $account['type'] ?>">
+                                                    value="<?php echo $account['type'] ?>">
                                                 <option value="">Pilih Tipe Akun</option>
-                                                <option value="1" <?php echo (1 == $account['type']) ? 'selected' : ''?>>Tipe: Admin</option>
-                                                <option value="2" <?php echo (2 == $account['type']) ? 'selected' : ''?>>Tipe: Agen</option>
+                                                <option
+                                                    value="1" <?php echo (1 == $account['type']) ? 'selected' : '' ?>>
+                                                    Tipe: Admin
+                                                </option>
+                                                <option
+                                                    value="2" <?php echo (2 == $account['type']) ? 'selected' : '' ?>>
+                                                    Tipe: Agen
+                                                </option>
                                             </select>
                                         </div>
                                         <div class="row">
@@ -69,18 +84,19 @@
                                             <!-- /.col -->
                                             <div class="col-xs-4">
                                                 <button type="submit" class="btn btn-primary btn-block btn-flat"
-                                                    id="btn-update"
-                                                    data-account-id="<?php echo $account['id']; ?>" 
-                                                    data-type-modal="User" 
-                                                    data-account-name="<?php echo $account['name']; ?>"
-                                                    data-href=""
-                                                    data-toggle="modal">
+                                                        id="btn-update"
+                                                        data-account-id="<?php echo $account['id']; ?>"
+                                                        data-type-modal="User"
+                                                        data-account-name="<?php echo $account['name']; ?>"
+                                                        data-href=""
+                                                        data-toggle="modal">
                                                     Ubah
                                                 </button>
                                             </div>
                                             <!-- /.col -->
                                         </div>
-                                    </form>                            </div>
+                                    </form>
+                                </div>
                                 <!-- /.table-responsive -->
                             </div>
                             <!-- /.box-body -->
@@ -147,23 +163,23 @@
     </div>
 
     <!-- jQuery 2.1.3 -->
-    <script src="<?php echo base_url('assets/plugins/jQuery/jQuery-2.1.3.min.js') ?>" 
-        type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/jQuery/jQuery-2.1.3.min.js') ?>"
+            type="text/javascript"></script>
     <!-- Bootstrap 3.3.2 JS -->
     <script src="<?php echo base_url('assets/bootstrap/js/bootstrap.min.js') ?>" type="text/javascript"></script>
     <!-- AdminLTE App -->
     <script src="<?php echo base_url('assets/dist/js/app.min.js') ?>" type="text/javascript"></script>
     <!-- datepicker -->
-    <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>" 
-        type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>"
+            type="text/javascript"></script>
     <!-- JQuery Validate -->
-    <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>" 
-        type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>"
+            type="text/javascript"></script>
 
     <script type="application/javascript">
         $(document).ready(function () {
             // The form
-            form = $("#update-form");
+            var form = $("#update-form");
             // The modal
             var confirm_modal = $('#confirm-update');
             // button update
@@ -209,23 +225,23 @@
                     type: "Tolong pilih tipe akun"
                 },
 
-                submitHandler: function (form) {
+                submitHandler: function () {
                     confirm_modal.modal('show');
                 }
             });
 
-            confirm_modal.on('show.bs.modal', function (e) {
+            confirm_modal.on('show.bs.modal', function () {
                 var type = btn_update.data('type-modal');
                 var id = btn_update.data('account-id');
                 var title = btn_update.data('account-name');
-            
+
                 var modal = $(this);
                 modal.find('#order-id').text(id);
                 modal.find('#type-modal').text(type);
                 modal.find('#order-name').text(title);
             });
 
-            confirm_modal.find('.btn-ok').click(function(e) {
+            confirm_modal.find('.btn-ok').click(function (e) {
                 // TODO kenapa harus native?
                 document.getElementById("update-form").submit();
             });

@@ -46,7 +46,7 @@
                                         <th>ID</th>
                                         <th>Bus</th>
                                         <th>Waktu Berangkat</th>
-                                        <th width="120px">Aksi</th>
+                                        <th width="150px">Aksi</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -155,7 +155,7 @@
             window.setTimeout(function () {
                 render_data(data);
                 load_animate.remove();
-            }, 3000);
+            }, 500);
 
             function render_data(data) {
                 $.each(data, function (index, obj) {

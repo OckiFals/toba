@@ -1,5 +1,5 @@
 <?php $this->load->view('header', ['title' => 'Tambah Akun']) ?>
-<div class="content-wrapper">
+    <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
@@ -36,10 +36,13 @@
                             <div class="box-body">
                                 <div class="register-box-body">
                                     <p class="login-box-msg">Daftarkan Akun Baru</p>
-                                    <form action="" method="POST" enctype="multipart/form-data" id="register-form" novalidate="novalidate">
+
+                                    <form action="" method="POST" enctype="multipart/form-data" id="register-form"
+                                          novalidate="novalidate">
                                         <div class="form-group has-feedback">
                                             <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                                            <input id="name" name="name" class="form-control" placeholder="Nama Lengkap" type="text">
+                                            <input id="name" name="name" class="form-control" placeholder="Nama Lengkap"
+                                                   type="text">
                                         </div>
                                         <div class="form-group has-feedback">
                                             <span class="glyphicon glyphicon-credit-card form-control-feedback"></span>
@@ -47,11 +50,13 @@
                                         </div>
                                         <div class="form-group has-feedback">
                                             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                                            <input id="password" class="form-control" placeholder="Password" name="password" type="password">
+                                            <input id="password" class="form-control" placeholder="Password"
+                                                   name="password" type="password">
                                         </div>
                                         <div class="form-group has-feedback">
                                             <span class="glyphicon glyphicon-repeat form-control-feedback"></span>
-                                            <input id="password2" class="form-control" placeholder="Tulis Ulang Password" name="password2" type="password">
+                                            <input id="password2" class="form-control"
+                                                   placeholder="Tulis Ulang Password" name="password2" type="password">
                                         </div>
                                         <div class="form-group has-feedback">
                                             <select class="form-control" id="type" name="type">
@@ -66,11 +71,13 @@
                                             </div>
                                             <!-- /.col -->
                                             <div class="col-xs-4">
-                                                <button type="submit" class="btn btn-primary btn-block btn-flat">Add</button>
+                                                <button type="submit" class="btn btn-primary btn-block btn-flat">Add
+                                                </button>
                                             </div>
                                             <!-- /.col -->
                                         </div>
-                                    </form>                            </div>
+                                    </form>
+                                </div>
                                 <!-- /.table-responsive -->
                             </div>
                             <!-- /.box-body -->
@@ -126,9 +133,11 @@
     <script src="<?php echo base_url('assets/dist/js/app.min.js') ?>" type="text/javascript"></script>
 
     <!-- datepicker -->
-    <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>"
+            type="text/javascript"></script>
     <!-- JQuery Validate -->
-    <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>"
+            type="text/javascript"></script>
 
     <script type="application/javascript">
         $(document).ready(function () {
