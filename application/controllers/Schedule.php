@@ -40,23 +40,16 @@ class Schedule extends CI_Controller{
          */
         $schedule_day = explode('-', 'tuesday-2');
 
-        # menampung nama hari(dalam int) dari waktu sekarang
-        // $dayOfWeek = jddayofweek(date('j'));
-        $dayNowOfWeek = date('N');
+        echo $schedule_day[0] . '<br>';
 
-        if ($schedule_day[1] <= $dayNowOfWeek) {
-            # menampung beda hari sekarang dengan hari yang diinputkan
-            $diffDay = $dayNowOfWeek - $schedule_day[1];
-            $startDate = date('j') - $diffDay;
-            $startDate = strtotime("next {$schedule_day[0]}");
+        $startDate = strtotime("next {$schedule_day[0]}");
 
-            echo date('d-m-Y', $startDate ) . "<br>";
+        echo date('d-m-Y', $startDate ) . "<br>";
 
-            $i=0;
-            for ($i; $i < 11; $i++) { 
-                echo date('d-m-Y', strtotime('+1 week', $startDate ) ) . "<br>";
-                $startDate = strtotime('+1 week', $startDate );
-            }
+        $i=0;
+        for ($i; $i < 11; $i++) { 
+            echo date('d-m-Y', strtotime('+1 week', $startDate ) ) . "<br>";
+            $startDate = strtotime('+1 week', $startDate );
         }
     }
 
