@@ -51,6 +51,10 @@ class Reservation extends CI_Controller {
         }
     }
 
+    public function cancel() {
+
+    }
+    
     public function confirmation() {
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
 
@@ -60,6 +64,9 @@ class Reservation extends CI_Controller {
     }
 
     public function validation() {
+        if (1 != $this->session->userdata('type'))
+            show_error('401 Unauthorized Request', 401 );
+        
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
 
         } else {

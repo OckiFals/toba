@@ -2,6 +2,10 @@
 
 class Ticket extends CI_Controller {
 
+    public function search() {
+
+    }
+    
     public function export_pdf() {
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
         	if ($this->validate()) {

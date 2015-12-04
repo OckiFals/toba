@@ -20,7 +20,8 @@ class Schedule extends CI_Controller {
     public function index() {
         if (1 != $this->session->userdata('type')) show_error('401 Unauthorized Request', 401);
 
-        $this->load->view('schedules/schedule-all');
+        $schedules = $this->Schedule_model->getAll();
+        $this->load->view('schedules/schedule-all', ['schedules' => $schedules]);
     }
 
     /**
@@ -68,11 +69,6 @@ class Schedule extends CI_Controller {
         }
 
     }
-
-    public function search() {
-
-    }
-
 
     public function edit() {
         if (1 != $this->session->userdata('type')) show_error('401 Unauthorized Request', 401);

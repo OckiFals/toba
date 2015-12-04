@@ -79,7 +79,7 @@ class Account extends CI_Controller {
      * @method: GET, POST, AJAX
      * @route: /account/update/[:id]
      */
-    public function update($id) {
+    public function edit($id) {
         if (1 != $this->session->userdata('type'))
             show_error('401 Unauthorized Request', 401 );
 
@@ -115,11 +115,6 @@ class Account extends CI_Controller {
             # cetak pesan, digunakan di account-all.php line 235 sebagai msg 
             echo 'Akun dengan ID: <strong>' . $this->input->get('id') . '</strong> berhasil dihapus!';    
         } 
-    }
-
-    public function search() {
-        if (1 != $this->session->userdata('type'))
-            show_error('401 Unauthorized Request', 401 );
     }
 
 }
