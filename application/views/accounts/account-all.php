@@ -31,7 +31,7 @@
             <div class="alert alert-info alert-dismissable" id="flash-message" style="display: none">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 <h4><i class="icon fa fa-check-square-o"></i> Info</h4>
-                <span id="flash-message-data">Data berhasil dihapus!</span>
+                <span id="flash-message-data"></span>
             </div>
             <!-- /flash message -->
 
@@ -158,6 +158,8 @@
             var confirm_modal = $('#confirm-delete');
             var flash_message = $('#flash-message');
 
+            renderFlashInfo();
+            
             // iterasi stdClass data ke dalam object javascript
             var data = [
                 <?php foreach ($accounts as $index => $account): ?>
@@ -170,7 +172,7 @@
                 },
                 <?php endforeach; ?>
             ];
-
+            
             window.setTimeout(function () {
                 render_data(data);
                 loading_indicator.remove();
@@ -192,7 +194,7 @@
                         obj.created_at +
                         '</span>',
                         // col 5
-                        ' <a href="account/update/' + obj.id + '" class="btn btn-xs btn-flat btn-primary"> ' +
+                        ' <a href="account/edit/' + obj.id + '" class="btn btn-xs btn-flat btn-primary"> ' +
                         ' <i class="fa fa-edit "></i> Ubah ' +
                         ' </a> ' + "\n" +
                         ' <a href="#" class="btn btn-xs btn-flat btn-danger" data-account-id="' + obj.id + '" ' +
@@ -207,6 +209,15 @@
 
             function hideFlashMessage() {
                 flash_message.fadeOut('normal');
+            }
+
+            function renderFlashInfo() {
+                var eventInfo = '<?php echo $this->session->flashdata('flash-message') ?>' || null; 
+                if (eventInfo) {
+                    flash_message.find('#flash-message-data').html(eventInfo);
+                    flash_message.fadeIn('normal');
+                    window.setTimeout(hideFlashMessage, 4000);
+                }
             }
 
             //The Calender

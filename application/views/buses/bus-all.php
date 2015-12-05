@@ -163,6 +163,8 @@
             var confirm_modal = $('#confirm-delete');
             var flash_message = $('#flash-message');
 
+            renderFlashInfo();
+
             // iterasi stdClass data ke dalam object javascript
             var data = [
                 <?php foreach($buses as $index => $bus): ?>
@@ -201,7 +203,7 @@
                         obj.class +
                         '</span>',
                         // col 5
-                        ' <a href="#" class="btn btn-xs btn-flat btn-primary"> ' +
+                        ' <a href="bus/edit/' + obj.id + '" class="btn btn-xs btn-flat btn-primary"> ' +
                             ' <i class="fa fa-edit "></i> Ubah ' +
                         ' </a> ' + "\n" +
                         ' <a href="#" class="btn btn-xs btn-flat btn-danger" data-bus-id="' + obj.id + '" ' +
@@ -216,6 +218,15 @@
 
             function hideFlashMessage(){
                 flash_message.fadeOut('normal');
+            }
+
+            function renderFlashInfo() {
+                var eventInfo = '<?php echo $this->session->flashdata('flash-message') ?>' || null; 
+                if (eventInfo) {
+                    flash_message.find('#flash-message-data').html(eventInfo);
+                    flash_message.fadeIn('normal');
+                    window.setTimeout(hideFlashMessage, 4000);
+                }
             }
 
             //The Calender

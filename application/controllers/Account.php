@@ -22,11 +22,8 @@ class Account extends CI_Controller {
         if (1 != $this->session->userdata('type'))
             show_error('401 Unauthorized Request', 401 );
         
-        # jika request berasal dari GET
-        else {
-            $accounts = $this->Account_model->getAll();
-            $this->load->view('accounts/account-all', ['accounts' => $accounts]);
-        }
+        $accounts = $this->Account_model->getAll();
+        $this->load->view('accounts/account-all', ['accounts' => $accounts]);
     }
 
     /**
@@ -55,12 +52,21 @@ class Account extends CI_Controller {
             # jika akun dengan id tersebut belum ada
             if (null === $account) {
                 // $this->Account_model->create();
+                # tambahkan info bahwa data berhasil ditambahkan kedalam session
+                $this->session->set_flashdata('flash-message', "Data baru berhasil ditambahkan!");
+                # arahkan kembali ke /account
+                redirect(base_url('account'));
             } else {
+                # tambahkan info bahwa nama akun telah digunakan
+                $this->session->set_flashdata('flash-message', "ID telah digunakan, silakan cari nama yang lain!");
+                
+                $formData = [
+                    'name' => $this->input->post('name'),
+                    'type' => $this->input->post('type')
+                ];
 
+                $this->load->view('accounts/add-account', ['form_data' => $formData]);
             }
-
-            # arahkan kembali ke /account
-            redirect(base_url('account'), 'refresh');
         } else {
             $this->load->view('accounts/add-account');
         }
@@ -84,9 +90,11 @@ class Account extends CI_Controller {
             show_error('401 Unauthorized Request', 401 );
 
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
-            $this->Account_model->update($id);
+            // $this->Account_model->update($id);
+            # tambahkan info bahwa data berhasil dirubah kedalam session
+            $this->session->set_flashdata('flash-message', "Data dengan id={$id} berhasil dirubah!");
             # arahkan kembali ke /account
-            redirect(base_url('account'), 'refresh');
+            redirect(base_url('account'));
         } else {
             $account_id = $this->Account_model->getByPK($id);
             $this->load->view('accounts/account-edit', ['account' => $account_id]);

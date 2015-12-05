@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var array $form_data
+ */
+
+(isset($form_data)) ? $form_data = $form_data : $form_data = [];
+?>
 <?php $this->load->view('header', ['title' => 'Tambah Akun']) ?>
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -23,6 +30,14 @@
             </div>
             <!-- END Content -->
 
+            <!-- flash message -->
+            <div class="alert alert-danger alert-dismissable" id="flash-message" style="display: none">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-warning"></i> Alert!</h4>
+                <span id="flash-message-data"></span>
+            </div>
+            <!-- /flash message -->
+
             <!-- Info boxes -->
             <div class="row">
                 <div class="col-md-8">
@@ -42,7 +57,7 @@
                                         <div class="form-group has-feedback">
                                             <span class="glyphicon glyphicon-user form-control-feedback"></span>
                                             <input id="name" name="name" class="form-control" placeholder="Nama Lengkap"
-                                                   type="text">
+                                                   type="text" <?php if (!empty($form_data)) echo "value='{$form_data['name']}'" ?>>
                                         </div>
                                         <div class="form-group has-feedback">
                                             <span class="glyphicon glyphicon-credit-card form-control-feedback"></span>
@@ -61,8 +76,12 @@
                                         <div class="form-group has-feedback">
                                             <select class="form-control" id="type" name="type">
                                                 <option value="">Pilih Tipe Akun</option>
-                                                <option value="1">Tipe: Admin</option>
-                                                <option value="2">Tipe: Agen</option>
+                                                <option value="1" <?php if (!empty($form_data) && ('1' === $form_data['type'])) echo "selected" ?>>
+                                                    Tipe: Admin
+                                                </option>
+                                                <option value="2" <?php if (!empty($form_data) && ('1' === $form_data['type'])) echo "selected" ?>>
+                                                    Tipe: Agen
+                                                </option>
                                             </select>
                                         </div>
                                         <div class="row">
@@ -143,6 +162,8 @@
         $(document).ready(function () {
             //The Calender
             $("#calendar").datepicker('setDate', 'today');
+            var flash_message = $('#flash-message');
+            renderFlashInfo();
 
             $("#register-form").validate({
 
@@ -182,6 +203,19 @@
                     form.submit();
                 }
             });
+
+            function renderFlashInfo() {
+                var eventInfo = '<?php echo $this->session->flashdata('flash-message') ?>' || null; 
+                if (eventInfo) {
+                    flash_message.find('#flash-message-data').html(eventInfo);
+                    flash_message.fadeIn('normal');
+                    window.setTimeout(hideFlashMessage, 4000);
+                }
+            }
+
+            function hideFlashMessage() {
+                flash_message.fadeOut('normal');
+            }
         });
     </script>
 <?php $this->load->view('footer') ?>

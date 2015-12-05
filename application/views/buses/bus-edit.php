@@ -1,4 +1,9 @@
-<?php $this->load->view('header', ['title' => 'Tambah Data Bus']); ?>
+<?php
+/**
+ * @var array $bus
+ */
+?>
+<?php $this->load->view('header', ['title' => 'Ubah Data Bus']); ?>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -10,7 +15,7 @@
             <ol class="breadcrumb">
                 <li><a href="<?php echo base_url('') ?>"><i class="fa fa-dashboard"></i> Beranda</a></li>
                 <li><a href="<?php echo base_url('bus') ?>"><i class="fa fa-road"></i> Semua Data Bus</a></li>
-                <li class="active"><i class="fa fa-edit"></i> Tambah Data Bus</li>
+                <li class="active"><i class="fa fa-edit"></i> Ubah Data Bus</li>
             </ol>
         </section>
 
@@ -30,7 +35,9 @@
                     <!-- TABLE: LATEST ORDERS -->
                     <div class="box box-info">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Tambah Data Bus</h3>
+                            <h3 class="box-title">
+                                Ubah Data Bus <?php echo ucfirst($bus->bus_name) ?>
+                            </h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -42,8 +49,10 @@
                                         <select class="form-control" id="po" name="po">
                                             <option value="">Pilih PO</option>
                                             <?php foreach ($po as $index => $value): ?>
-                                                <option
-                                                    value="<?php echo $value->id ?>"><?php echo $value->name ?></option>
+                                                <option value="<?php echo $value->id ?>"
+                                                    <?php echo ($value->id == $bus->po) ? 'selected' : '' ?>> 
+                                                    <?php echo $value->name ?> 
+                                                </option>
                                             <?php endforeach; ?>
                                         </select>
 
@@ -51,31 +60,38 @@
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-road form-control-feedback"></span>
                                         <input id="bus" name="bus" class="form-control" placeholder="Nama Bus"
-                                               type="text">
+                                               type="text" value="<?php echo ucfirst($bus->bus_name) ?>">
                                     </div>
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
                                         <input id="destination" class="form-control" placeholder="Tujuan"
-                                               name="destination" type="text">
+                                               name="destination" type="text" 
+                                               value="<?php echo $bus->destination_display . ' (' . strtoupper($bus->destination) . ')'?>">
                                     </div>
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-star form-control-feedback"></span>
                                         <select class="form-control" id="class" name="class">
                                             <option value="">Pilih Kelas</option>
-                                            <option value="1">Kelas: Eksekutif</option>
-                                            <option value="2">Kelas: Bisnis</option>
-                                            <option value="3">Kelas: Ekonomi</option>
+                                            <option value="1" <?php echo ('1' === $bus->class) ? 'selected' : '' ?>>
+                                                Kelas: Eksekutif
+                                            </option>
+                                            <option value="2" <?php echo ('2' === $bus->class) ? 'selected' : '' ?>>    Kelas: Bisnis
+                                            </option>
+                                            <option value="3" <?php echo ('3' === $bus->class) ? 'selected' : '' ?>>
+                                                Kelas: Ekonomi
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-plus-sign form-control-feedback"></span>
                                         <input id="capacity" class="form-control" placeholder="Kapasitas Penumpang"
-                                               name="capacity" type="text">
+                                               name="capacity" type="text" value="<?php echo $bus->capacity ?>">
                                     </div>
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-usd form-control-feedback"></span>
                                         <input id="ticket_price" class="form-control" placeholder="Harga Tiket"
-                                               name="ticket_price" type="text">
+                                               name="ticket_price" type="text" 
+                                               value="<?php echo $bus->ticket_price ?>">
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-8">
@@ -83,7 +99,14 @@
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-xs-4">
-                                            <button type="submit" class="btn btn-primary btn-block btn-flat">Add
+                                            <button type="submit" class="btn btn-primary btn-block btn-flat"
+                                                id="btn-update"
+                                                data-bus-id="<?php echo $bus->id; ?>"
+                                                data-type-modal="User"
+                                                data-bus-name="<?php echo $bus->bus_name; ?>"
+                                                data-href=""
+                                                data-toggle="modal">
+                                                Ubah
                                             </button>
                                         </div>
                                         <!-- /.col -->
@@ -133,6 +156,27 @@
     </div>
     <!-- /.content-wrapper -->
 
+    <div class="modal fade" id="confirm-update" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Konfirmasi Ubah</h4>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin untuk mengubah <span id="type-modal"> </span>
+                    <strong id="order-name"> </strong> dengan #id=<span id="order-id"> </span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Batal</button>
+                    <button class="btn btn-danger btn-flat btn-ok" id="btn-confirm">Ubah</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- jQuery 2.1.3 -->
     <script src="<?php echo base_url('assets/plugins/jQuery/jQuery-2.1.3.min.js') ?>" type="text/javascript"></script>
     <!-- Bootstrap 3.3.2 JS -->
@@ -156,11 +200,15 @@
         $(document).ready(function () {
             //The Calender
             $("#calendar").datepicker('setDate', 'today');
+            // The modal
+            var confirm_modal = $('#confirm-update');
+            // button update
+            var btn_update = $('#btn-update');
 
             var dest_states = [];
 
             $.ajax({
-                url: '../destination',
+                url: '../../destination',
                 beforeSend: function (xhr) {
                     xhr.overrideMimeType("application/json; charset=x-user-defined");
                 },
@@ -226,8 +274,24 @@
                 },
 
                 submitHandler: function (form) {
-                    form.submit();
+                    confirm_modal.modal('show');
                 }
+            });
+
+            confirm_modal.on('show.bs.modal', function () {
+                var type = btn_update.data('type-modal');
+                var id = btn_update.data('bus-id');
+                var title = btn_update.data('bus-name');
+
+                var modal = $(this);
+                modal.find('#order-id').text(id);
+                modal.find('#type-modal').text(type);
+                modal.find('#order-name').text(title);
+            });
+
+            confirm_modal.find('.btn-ok').click(function (e) {
+                // TODO kenapa harus native?
+                document.getElementById("bus-form").submit();
             });
         });
     </script>

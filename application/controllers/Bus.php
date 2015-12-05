@@ -37,7 +37,11 @@ class Bus extends CI_Controller {
             show_error('401 Unauthorized Request', 401 );
 
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
-            # taruh kode disini
+            // $this->Bus_model->create();
+            # tambahkan info bahwa data berhasil dirubah kedalam session
+            $this->session->set_flashdata('flash-message', "Data Bus berhasil ditambahkan!");
+            # arahkan kembali ke /bus
+            redirect(base_url('bus'));
         } else {
             $po = $this->Po_model->getAll();
             $this->load->view('buses/add-bus', ['po' => $po]);
@@ -47,6 +51,21 @@ class Bus extends CI_Controller {
     public function edit($id) {
         if (1 != $this->session->userdata('type'))
             show_error('401 Unauthorized Request', 401 );
+
+        if ("POST" === $this->input->server('REQUEST_METHOD')) {
+            // $this->Bus_model->update($id);
+            # tambahkan info bahwa data berhasil dirubah kedalam session
+            $this->session->set_flashdata('flash-message', "Data Bus dengan id={$id} berhasil dirubah!");
+            # arahkan kembali ke /bus
+            redirect(base_url('bus'));
+        } else {
+            $bus = $this->Bus_model->getByPK($id);
+            $po = $this->Po_model->getAll();
+            $this->load->view('buses/bus-edit', [
+                'bus' => $bus,
+                'po' => $po
+            ]);
+        }
     }
 
     /**
