@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var stdClass $schedules
+ */
+?>
 <?php $this->load->view('header', ['title' => 'Kelola Jadwal Bus']); ?>
 <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -43,8 +48,8 @@
                                 <table class="table table-striped no-margin" id="schedule-list">
                                     <thead>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Bus</th>
+                                        <th width="28px">ID</th>
+                                        <th width="220px">Bus</th>
                                         <th>Waktu Berangkat</th>
                                         <th width="150px">Aksi</th>
                                     </tr>
@@ -145,11 +150,13 @@
 
             // example data
             var data = [
+                <?php foreach ($schedules as $index => $schedule): ?>
                 {
-                    id: '1',
-                    name: 'Kembar Jaya',
-                    time: 'Besok'
-                }
+                    id: '<?php echo $schedule->id ?>',
+                    name: '<?php echo $schedule->bus_name ?>',
+                    time: '<?php echo $schedule->time ?>'
+                },
+                <?php endforeach; ?>
             ];
 
             window.setTimeout(function () {
