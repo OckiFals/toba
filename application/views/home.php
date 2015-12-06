@@ -126,7 +126,7 @@
             date.datetimepicker({
                 timepicker: false,
                 minDate: '-1970/01/01',
-                format: 'd/m/Y'
+                format: 'Y/m/d'
             });
 
             $('#btn-search').click(function (e) {
@@ -175,24 +175,50 @@
             function showBusContent() {
                 $.ajax({
                     url: 'search',
-                    data: input_search.val() + '&' + date.val() + '&' + $('form input[type=radio]:checked').val(),
+                    data: { 'dest': input_search.val(), 'date': date.val(), 'class':  $('form input[type=radio]:checked').val()},
                     beforeSend: function (xhr) {
                         xhr.overrideMimeType("application/json; charset=x-user-defined");
                     }
                 }).done(function (data) {
                     var content = '';
-                    $.each(data, function (index, bus) {
+
+                    if (0 < data.length) {
+                        $.each(data, function (index, bus) {
+                            var class_display;
+                            switch(bus.class) {
+                                case '1': 
+                                    class_display = 'Eksekutif';
+                                    break;
+                                case '2': 
+                                    class_display = 'Bisnis';
+                                    break;
+                                case '3': 
+                                    class_display = 'Ekonomi';
+                                    break; 
+                            }
+
+                            content += '' +
+                                '<div class="col-md-4 col-sm-6 col-xs-12 center-block">' +
+                                '<div class="info-box">' +
+                                '<span class="info-box-icon bg-red"><i class="ion ion-ios-gear-outline"></i></span>' +
+                                '<div class="info-box-content">' +
+                                '<a href="pemesanan?dest=' + bus.region + '&bus=' + bus.bus_name + '&tanggal=' + bus.schedule_time +'" class="info-box-text">' + bus.bus_name + '</a>' +
+                                '<span class="info-box-test">' + class_display + '</span>' +
+                                '<span class="info-box-number">Rp.' + bus.ticket_price + '</span>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
+                        });
+                    } else {
                         content += '' +
-                            '<div class="col-md-4 col-sm-6 col-xs-12 center-block">' +
-                            '<div class="info-box">' +
-                            '<span class="info-box-icon bg-' + bus.color + '"><i class="ion ion-ios-gear-outline"></i></span>' +
-                            '<div class="info-box-content">' +
-                            '<span class="info-box-text">' + bus.bus_name + '</span>' +
-                            '<span class="info-box-number">' + bus.class + '</span>' +
-                            '</div>' +
+                        '   <div class="col-md-12 center-block">' +
+                            '<div class="alert alert-info alert-dismissable">' +
+                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>' +
+                            '<h4><i class="icon fa fa-info"></i> Data Tidak Ditemukan!</h4>' +
+                            'Silakan cari yang lainnya.' +
                             '</div>' +
                             '</div>';
-                    });
+                    }
 
                     load_indicator.hide();
                     bus_box.append(content);

@@ -6,6 +6,7 @@ class Site extends CI_Controller {
         parent::__construct();
         $this->load->helper(array('form', 'url'));
         $this->load->model('Account_model');
+        $this->load->model('Ticket_model');
     }
 
     /**
@@ -104,30 +105,14 @@ class Site extends CI_Controller {
      * @route: /search 
      */
     public function search() {
-        # example data
-        $data = [
-            [
-                'id' => '1',
-                'bus_name' => 'Mayasari Bhakti',
-                'destination' => 'Jakarta',
-                'class' => 'Ekonomi',
-                'color' => 'aqua'
-            ],
-            [
-                'id' => '2',
-                'bus_name' => 'Bimasena',
-                'destination' => 'Jakarta',
-                'class' => 'Bisnis',
-                'color' => 'red'
-            ],
-            [
-                'id' => '3',
-                'bus_name' => 'Arjuno',
-                'destination' => 'Jakarta',
-                'class' => 'Eksekutif',
-                'color' => 'green'
-            ],
-        ];
+        # set zona waktu lokal
+        date_default_timezone_set('Asia/Jakarta');
+        
+        $data = $this->Ticket_model->search(
+            $this->input->get('dest'),
+            date('Y-m-d', strtotime($this->input->get('date'))),
+            $this->input->get('class')
+        );
 
         sleep(1);
 

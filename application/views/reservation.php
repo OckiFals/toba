@@ -1,3 +1,14 @@
+<?php 
+
+if (empty($this->input->get('dest')) ||
+    empty($this->input->get('bus')) ||
+    empty($this->input->get('tanggal'))
+    ){
+    redirect(base_url()); 
+}
+
+?>
+
 <?php $this->load->view('customer-header', ['title' => 'Pesan Tiket']); ?>
 <!-- Full Width Column -->
     <div class="content-wrapper">
@@ -35,15 +46,15 @@
                                                 <tbody>
                                                   <tr>
                                                     <th style="width: 50%">Tujuan</th>
-                                                    <td>Jakarta</td>
+                                                    <td><?php echo $this->input->get('dest') ?></td>
                                                   </tr>
                                                   <tr>
                                                     <th>Bus</th>
-                                                    <td>Kuncoro</td>
+                                                    <td><?php echo $this->input->get('bus') ?></td>
                                                   </tr>
                                                   <tr>
                                                     <th>Waktu Keberangkatan</th>
-                                                    <td>735-845-642</td>
+                                                    <td><?php echo $this->input->get('tanggal') ?></td>
                                                   </tr>
                                                 </tbody>
                                             </table>
