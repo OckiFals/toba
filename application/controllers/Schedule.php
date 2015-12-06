@@ -32,7 +32,8 @@ class Schedule extends CI_Controller {
      * @route: /schedule/add
      */
     public function add() {
-
+        if (1 != $this->session->userdata('type')) show_error('401 Unauthorized Request', 401);
+        
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
             # set zona waktu lokal
             date_default_timezone_set('Asia/Jakarta');
