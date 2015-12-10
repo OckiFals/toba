@@ -57,10 +57,13 @@ class Account_model extends CI_Model {
     public function update($id) {
         $data = array(
             'id' => $this->input->post('id'),
-            'password' => md5($this->input->post('password')),
             'name' => $this->input->post('name'),
             'type' => $this->input->post('type')
         );
+
+        if (!empty($this->input->post('password')))
+        	$data['password'] = $this->input->post('password');
+
         $this->db->update('account', $data, array('id' => $id));
     }
 
