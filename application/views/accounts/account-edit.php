@@ -197,14 +197,6 @@
                 rules: {
                     name: "required",
                     id: "required",
-                    password: {
-                        required: true,
-                        minlength: 5
-                    },
-                    password2: {
-                        required: true,
-                        minlength: 5
-                    },
                     type: {
                         required: true
                     }
@@ -214,14 +206,6 @@
                 messages: {
                     name: "Tolong ketikkan nama akun",
                     id: "Tolong ketikkan akun ID",
-                    password: {
-                        required: "Tolong ketikkan password",
-                        minlength: "Password setidaknya berisi 5 karakter"
-                    },
-                    password2: {
-                        required: "Tolong ketikan password",
-                        minlength: "Password setidaknya berisi 5 karakter"
-                    },
                     type: "Tolong pilih tipe akun"
                 },
 

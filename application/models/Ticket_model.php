@@ -16,7 +16,24 @@ class Ticket_model extends CI_Model {
 	}
 
     public function create($name, $identity, $birth) {
-        
+    	# mengambil id reservasi terbaru
+    	$reservation = $this->db->query("SELECT MAX(`id`) FROM `ticket`")->result();
+    	# mengambil id bus dari get('bus')
+    	$bus = $this->db->query("SELECT `id` 
+    		FROM `bus`
+    		WHERE `bus_name` = ?",
+    		[$this->input->get('bus')]
+    	)->result();
+
+        $data = array(
+            'passenger_name' => $name,
+            'identity_no' => $identity,
+            'date_of_birth' => $birth,
+            'bus_id' => $bud->id,
+            'reservation_id' => $reservation->id
+        );
+
+        $this->db->insert('ticket', $data);
     }
 
     public function getByCodeBooking($code) {
