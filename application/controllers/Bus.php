@@ -37,7 +37,7 @@ class Bus extends CI_Controller {
             show_error('401 Unauthorized Request', 401 );
 
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
-            // $this->Bus_model->create();
+            $this->Bus_model->create();
             # tambahkan info bahwa data berhasil dirubah kedalam session
             $this->session->set_flashdata('flash-message', "Data Bus berhasil ditambahkan!");
             # arahkan kembali ke /bus
@@ -53,7 +53,7 @@ class Bus extends CI_Controller {
             show_error('401 Unauthorized Request', 401 );
 
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
-            // $this->Bus_model->update($id);
+            $this->Bus_model->update($id);
             # tambahkan info bahwa data berhasil dirubah kedalam session
             $this->session->set_flashdata('flash-message', "Data Bus dengan id={$id} berhasil dirubah!");
             # arahkan kembali ke /bus
@@ -79,15 +79,15 @@ class Bus extends CI_Controller {
      * @method: AJAX
      * @route: /bus/delete/[:id]
      */
-    public function delete() {
+    public function delete($id) {
         if (1 != $this->session->userdata('type'))
             show_error('401 Unauthorized Request', 401 );
 
         # jika request berasal dari AJAX
         if ($this->input->is_ajax_request()) {
             # hapus data
-            // $this->Bus_model->delete($this->input->get('id'));
-            echo 'Bus dengan ID: <strong>' . $this->input->get('id') . '</strong> berhasil dihapus!';    
+            $this->Bus_model->delete($id);
+            echo 'Bus dengan ID: <strong>' . $id . '</strong> berhasil dihapus!';    
         } 
     }
 

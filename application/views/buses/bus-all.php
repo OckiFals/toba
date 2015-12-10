@@ -253,8 +253,7 @@
                 var target = '#bus-' + btn_target.data('bus-id');
                 
                 $.ajax({
-                    url: 'bus/delete',
-                    data: {id: btn_target.data('bus-id')} 
+                    url: 'bus/delete/' + btn_target.data('bus-id')
                 }).done(function(msg) {
                     flash_message.find('#flash-message-data').html(msg);
                     flash_message.fadeIn('normal');
