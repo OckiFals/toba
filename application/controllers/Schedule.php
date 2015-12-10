@@ -62,8 +62,8 @@ class Schedule extends CI_Controller {
             }
             # simpan info dalam session
             $this->session->set_userdata('flash-message', 'Jadwal telah ditambahkan!');
-            # arahkan kembali ke /account
-            redirect(base_url('account'), 'refresh');
+            # arahkan kembali ke /schedule
+            redirect(base_url('schedule'), 'refresh');
         } else {
             $buses = $this->Bus_model->getAll();
             $this->load->view('schedules/add-schedule', ['buses' => $buses]);
@@ -71,11 +71,19 @@ class Schedule extends CI_Controller {
 
     }
 
-    public function edit() {
+    public function edit($id) {
         if (1 != $this->session->userdata('type')) show_error('401 Unauthorized Request', 401);
     }
 
-    public function delete() {
+    public function delete($id) {
         if (1 != $this->session->userdata('type')) show_error('401 Unauthorized Request', 401);
+
+        # jika request berasal dari AJAX
+        if ($this->input->is_ajax_request()) {
+            # hapus data
+            $this->Schedule_model->delete($id);
+            # cetak pesan
+            echo 'Jadwal Bus dengan ID: <strong>' . $id . '</strong> berhasil dihapus!';    
+        } 
     }
 }

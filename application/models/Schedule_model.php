@@ -35,8 +35,15 @@ class Schedule_model extends CI_Model {
         
     }
 
+    /**
+     * Menghapus jadwal bus
+     * Data dihapus berdasarkan id yang dikirim 
+     * melalui AJAX
+     *
+     * @param $id id jadwal
+     */
     public function delete($id) {
-        
+        $this->db->delete('schedule', array('id' => $id));
     }
 
 }
