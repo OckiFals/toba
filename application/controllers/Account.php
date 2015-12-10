@@ -51,7 +51,7 @@ class Account extends CI_Controller {
 
             # jika akun dengan id tersebut belum ada
             if (null === $account) {
-                // $this->Account_model->create();
+                $this->Account_model->create();
                 # tambahkan info bahwa data berhasil ditambahkan kedalam session
                 $this->session->set_flashdata('flash-message', "Data baru berhasil ditambahkan!");
                 # arahkan kembali ke /account
@@ -90,7 +90,7 @@ class Account extends CI_Controller {
             show_error('401 Unauthorized Request', 401 );
 
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
-            // $this->Account_model->update($id);
+            $this->Account_model->update($id);
             # tambahkan info bahwa data berhasil dirubah kedalam session
             $this->session->set_flashdata('flash-message', "Data dengan id={$id} berhasil dirubah!");
             # arahkan kembali ke /account
@@ -112,16 +112,16 @@ class Account extends CI_Controller {
      * @method: AJAX
      * @route: /account/delete/[:id]
      */
-    public function delete() {
+    public function delete($id) {
         if (1 != $this->session->userdata('type'))
             show_error('401 Unauthorized Request', 401 );
 
         # jika request berasal dari AJAX
         if ($this->input->is_ajax_request()) {
             # hapus data
-            // $this->Account_model->delete($this->input->get('id'));
+            $this->Account_model->delete($id);
             # cetak pesan, digunakan di account-all.php line 235 sebagai msg 
-            echo 'Akun dengan ID: <strong>' . $this->input->get('id') . '</strong> berhasil dihapus!';    
+            echo 'Akun dengan ID: <strong>' . $id . '</strong> berhasil dihapus!';    
         } 
     }
 

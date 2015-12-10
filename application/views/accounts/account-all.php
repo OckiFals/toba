@@ -246,8 +246,7 @@
                 // memastikan bahwa akun yang dihapus bukanlah admin utama
                 if ('#account-root' !== target) {
                     $.ajax({
-                        url: 'account/delete',
-                        data: {id: btn_target.data('account-id')}
+                        url: 'account/delete/' + btn_target.data('account-id')
                     }).done(function (msg) {
                         flash_message.find('#flash-message-data').html(msg);
                         flash_message.fadeIn('normal');
