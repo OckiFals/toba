@@ -13,7 +13,12 @@ class Po_model extends CI_Model {
     }
 
     public function create() {
+        $data = array(
+            'id' => $this->input->post('id'),
+            'name' => $this->input->post('name')
+        );
 
+        $this->db->insert('po', $data);
     }
 }
 
