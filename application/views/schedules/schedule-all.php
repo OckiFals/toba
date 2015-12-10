@@ -28,6 +28,14 @@
             </div>
             <!-- END Content -->
 
+            <!-- flash message -->
+            <div class="alert alert-info alert-dismissable" id="flash-message" style="display: none">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-check-square-o"></i> Info</h4>
+                <span id="flash-message-data"></span>
+            </div>
+            <!-- /flash message -->
+
             <!-- Info boxes -->
             <div class="row">
                 <div class="col-md-8">
@@ -147,6 +155,10 @@
         $(document).ready(function () {
             var schedule_table = $('#schedule-list').DataTable();
             var load_animate = $('#load-animate');
+            var confirm_modal = $('#confirm-delete');
+            var flash_message = $('#flash-message');
+
+            renderFlashInfo();
 
             // example data
             var data = [
@@ -170,7 +182,7 @@
                         // col 1
                         obj.id,
                         // col 2
-                        obj.name,
+                        '<span id="schedule-' + obj.id + '">' + obj.name + '</span>',
                         // col 3
                         ' <span class="badge bg-primary"><i class="fa  fa-clock-o"></i> ' +
                         obj.time +
@@ -179,29 +191,65 @@
                         ' <a href="#" class="btn btn-xs btn-flat btn-primary"> ' +
                         ' <i class="fa fa-edit "></i> Ubah ' +
                         ' </a> ' + "\n" +
-                        ' <a href="#" class="btn btn-xs btn-flat btn-danger" data-account-id="' + obj.id + '" ' +
-                        ' data-type-modal="Jadwal Bus" data-account-name=" ' + obj.name + ' " ' +
+                        ' <a href="#" class="btn btn-xs btn-flat btn-danger" data-schedule-id="' + obj.id + '" ' +
+                        ' data-type-modal="Jadwal Bus" data-schedule-name=" ' + obj.name + ' " ' +
                         ' data-toggle="modal" data-href="#"' +
                         ' data-target="#confirm-delete"><i class="fa fa-trash-o"></i> Hapus</a> '
                     ]).draw();
                 });
             }
 
+            function hideFlashMessage(){
+                flash_message.fadeOut('normal');
+            }
+
+            function renderFlashInfo() {
+                var eventInfo = '<?php echo $this->session->flashdata('flash-message') ?>' || null; 
+                if (eventInfo) {
+                    flash_message.find('#flash-message-data').html(eventInfo);
+                    flash_message.fadeIn('normal');
+                    window.setTimeout(hideFlashMessage, 4000);
+                }
+            }
+
             //The Calender
             $("#calendar").datepicker('setDate', 'today');
 
-            $('#confirm-delete').on('show.bs.modal', function (e) {
+            var btn_target;
+            confirm_modal.on('show.bs.modal', function (e) {
                 var button = $(e.relatedTarget); // Button that triggered the modal
                 var type = button.data('type-modal'); // Extract post id from data-name attribute
-                var id = button.data('account-id'); // Extract post id from data-name attribute
-                var title = button.data('account-name'); // Extract post id from data-name attribute
+                var id = button.data('schedule-id'); // Extract post id from data-name attribute
+                var title = button.data('schedule-name'); // Extract post id from data-name attribute
+
+                btn_target = button;
 
                 var modal = $(this);
                 modal.find('#order-id').text(id);
                 modal.find('#type-modal').text(type);
                 modal.find('#order-name').text(title);
 
-                //$(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+                // $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+            });
+
+            confirm_modal.find('.btn-ok').click(function () {
+                var target = '#schedule-' + btn_target.data('schedule-id');
+                
+                $.ajax({
+                    url: 'schedule/delete/' + btn_target.data('schedule-id')
+                }).done(function(msg) {
+                    flash_message.find('#flash-message-data').html(msg);
+                    flash_message.fadeIn('normal');
+                    window.setTimeout( hideFlashMessage, 4000);
+
+                    schedule_table
+                        .row($(target).parent().parent())
+                        .remove()
+                        .draw();
+                });
+
+
+                confirm_modal.modal('hide');
             });
         });
     </script>
