@@ -27,6 +27,21 @@ class Schedule_model extends CI_Model {
         $this->db->insert('schedule', $data);
     }
 
+    public function getByPK($id) {
+        $query = $this->db->query("SELECT A.*, 
+            B.`po`, B.`bus_name`, B.`destination`, 
+            B.`class`, B.`capacity`, B.`ticket_price`, C.`region` as `destination_display` 
+            FROM `schedule` A 
+                INNER JOIN `bus` B 
+                    ON A.`bus_id` = B.`id` 
+                INNER JOIN `destination` C
+                    ON B.`destination` = C.`alias`
+            WHERE A.`id` = ?",
+            [$id]
+        );
+        return $query->row();
+    }
+
     public function getByBusname($bus_name) {
         
     }
