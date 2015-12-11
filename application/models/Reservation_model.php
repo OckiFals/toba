@@ -30,7 +30,7 @@ class Reservation_model extends CI_Model {
             'booking_code' => $booking_code
         );
 
-        // $this->db->insert('reservation', $data);
+        $this->db->insert('reservation', $data);
 
         return $booking_code;
     }
@@ -40,7 +40,9 @@ class Reservation_model extends CI_Model {
     }
 
     public function confirm() {
-        
+        $this->db->update('reservation', ['status' => 2], [
+            'booking_code' => $this->input->post('booking_code')
+        ]);
     }
 
 }

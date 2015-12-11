@@ -27,6 +27,13 @@
                             <!-- /.box-header -->
 
                             <div class="box-body">
+                                <!-- flash message -->
+                                <div class="alert alert-info alert-dismissable" id="flash-message" style="display: none">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <h4><i class="icon fa fa-check-square-o"></i> Info!</h4>
+                                    <span id="flash-message-data"></span>
+                                </div>
+                                <!-- /flash message -->
                                 <form role="form" action="" method="POST" id="confirmation-form" novalidate="novalidate">
                                     <div class="box-body">
                                         <div class="form-group">
@@ -52,13 +59,22 @@
                                     </div>
                                     <!-- /.box-body -->
                                     <div class="row no-print">
-                                            <button class="btn btn-primary pull-right" style="margin-right: 25px;">
-                                                Konfirmasi Pembayaran
-                                            </button>
-                                        </div>
+                                        <button class="btn btn-primary pull-right" id="btn-confirm" 
+                                            style="margin-right: 25px;">
+                                            Konfirmasi Pembayaran
+                                        </button>
+                                        <a href="<?php echo base_url() ?>" class="btn btn-primary pull-right" id="btn-back" 
+                                            style="margin-right: 25px; display: none">
+                                            Kembali
+                                        </a>
                                     </div>
                                 </form>
                             </div>
+                            <!-- Loading Indicator -->
+                            <div class="overlay" id="load-animate" style="display: none">
+                                <i class="fa fa-refresh fa-spin"></i>
+                            </div>
+                            <!-- / Loading Indicator -->
                         </div>
                     </div>
                 </div>
@@ -85,6 +101,9 @@
 <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        var loading_indicator = $("#load-animate");
+        var flash_message = $("#flash-message");
+
         $('#transfer_time').datetimepicker({
             minDate:'-1970/01/02',
             maxDate: '0'
@@ -100,6 +119,22 @@
                 booking_code: "Tolong isi dengan kode booking",
                 account_holder: "Tolong isi dengan nama pemilik rekening",
                 transfer_time: "Tolong isi dengan waktu transfer"
+            },
+            submitHandler: function (form) {
+                loading_indicator.show();
+
+                $.post("konfirmasi-pembayaran",
+                    $("#confirmation-form").serialize()
+                ).done(function(msg) {
+                    window.setTimeout(function () {
+                        loading_indicator.hide();
+                        flash_message.show().find("#flash-message-data").html(msg);
+                    }, 500);
+                    // sembunyikan button konfirmasi
+                    $("#btn-confirm").hide();
+                    $("#btn-back").show();
+                    $("input").prop("disabled", true);
+                });
             }
         });
     });

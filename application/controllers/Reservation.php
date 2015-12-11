@@ -6,6 +6,7 @@ class Reservation extends CI_Controller {
         parent::__construct();
         $this->load->helper(array('form', 'url'));
         $this->load->model('Reservation_model');
+        $this->load->model('Payment_model');
         $this->load->model('Schedule_model');
         $this->load->model('Ticket_model');
     }
@@ -37,11 +38,11 @@ class Reservation extends CI_Controller {
                 $passenger_id = $this->input->post("passenger_id_{$i}");
                 $passenger_birth = $this->input->post("passenger_birth_{$i}");
 
-                // $this->Ticket_model->create(
-                //     $passenger_name,
-                //     $passenger_id,
-                //     $passenger_birth
-                // );
+                $this->Ticket_model->create(
+                    $passenger_name,
+                    $passenger_id,
+                    $passenger_birth
+                );
             }
 
             # simpan informasi 'Pesanan telah dikirim' kedalam session
@@ -63,7 +64,10 @@ class Reservation extends CI_Controller {
     
     public function confirmation() {
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
+            $this->Payment_model->create();
             $this->Reservation_model->confirm();
+
+            echo 'Konfirmasi telah dikirim!';
         } else {
             $this->load->view('payment-confirmation');
         }
