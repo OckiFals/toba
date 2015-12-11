@@ -202,8 +202,8 @@
                                 '<div class="info-box">' +
                                 '<span class="info-box-icon bg-red"><i class="ion ion-ios-gear-outline"></i></span>' +
                                 '<div class="info-box-content">' +
-                                '<a href="pemesanan?dest=' + bus.region + '&bus=' + bus.bus_name + '&tanggal=' + bus.schedule_time +'" class="info-box-text">' + bus.bus_name + '</a>' +
-                                '<span class="info-box-test">' + class_display + '</span>' +
+                                '<a href="pemesanan?q=' + bus.schedule_id + '" class="info-box-text">' + bus.bus_name + '</a>' +
+                                '<span class="label label-primary"><i class="fa  fa-star"></i> ' + class_display + '</span>' +
                                 '<span class="info-box-number">Rp.' + bus.ticket_price + '</span>' +
                                 '</div>' +
                                 '</div>' +

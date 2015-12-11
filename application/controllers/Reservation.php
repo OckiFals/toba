@@ -6,6 +6,7 @@ class Reservation extends CI_Controller {
         parent::__construct();
         $this->load->helper(array('form', 'url'));
         $this->load->model('Reservation_model');
+        $this->load->model('Schedule_model');
         $this->load->model('Ticket_model');
     }
 
@@ -29,25 +30,30 @@ class Reservation extends CI_Controller {
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
             $ticket_count = $this->input->post('ticket_count');
 
-            $this->Reservation_model->create();
+            $booking_code = $this->Reservation_model->create();
 
-            for ($i=0; $i < $ticket_count; $i++) { 
-                $passanger_name = $this->input->post('passanger_name_' + $i);
-                $passanger_id = $this->input->post('passanger_id_' + $i);
-                $passanger_birth = $this->input->post('passanger_birth_' + $i);
+            for ($i=1; $i < $ticket_count+1; $i++) { 
+                $passenger_name = $this->input->post("passenger_name_{$i}");
+                $passenger_id = $this->input->post("passenger_id_{$i}");
+                $passenger_birth = $this->input->post("passenger_birth_{$i}");
 
-                $this->Ticket_model->create(
-                    $passanger_name,
-                    $passanger_id,
-                    $passanger_birth
-                );
+                // $this->Ticket_model->create(
+                //     $passenger_name,
+                //     $passenger_id,
+                //     $passenger_birth
+                // );
             }
 
             # simpan informasi 'Pesanan telah dikirim' kedalam session
             # generate booking_code 
+            echo $booking_code;
 
         } else {
-            $this->load->view('reservation');
+            $this->load->view('reservation', [
+                'data' => $this->Schedule_model->getByPK(
+                    $this->input->get('q')
+                )
+            ]);
         }
     }
 
@@ -57,14 +63,14 @@ class Reservation extends CI_Controller {
     
     public function confirmation() {
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
-
+            $this->Reservation_model->confirm();
         } else {
             $this->load->view('payment-confirmation');
         }
     }
 
     public function validation() {
-        if (1 != $this->session->userdata('type'))
+        if (2 != $this->session->userdata('type'))
             show_error('401 Unauthorized Request', 401 );
         
         if ("POST" === $this->input->server('REQUEST_METHOD')) {

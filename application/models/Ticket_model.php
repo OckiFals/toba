@@ -16,20 +16,16 @@ class Ticket_model extends CI_Model {
 	}
 
     public function create($name, $identity, $birth) {
+        # set zona waktu lokal
+        date_default_timezone_set('Asia/Jakarta');
     	# mengambil id reservasi terbaru
-    	$reservation = $this->db->query("SELECT MAX(`id`) FROM `ticket`")->result();
-    	# mengambil id bus dari get('bus')
-    	$bus = $this->db->query("SELECT `id` 
-    		FROM `bus`
-    		WHERE `bus_name` = ?",
-    		[$this->input->get('bus')]
-    	)->result();
+    	$reservation = $this->db->query("SELECT MAX(`id`) as `id` FROM `reservation`")->row();
 
         $data = array(
             'passenger_name' => $name,
             'identity_no' => $identity,
             'date_of_birth' => $birth,
-            'bus_id' => $bud->id,
+            'bus_id' => $this->input->get('q'),
             'reservation_id' => $reservation->id
         );
 
