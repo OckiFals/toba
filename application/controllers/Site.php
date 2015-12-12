@@ -7,6 +7,7 @@ class Site extends CI_Controller {
         $this->load->helper(array('form', 'url'));
         $this->load->model('Account_model');
         $this->load->model('Ticket_model');
+        $this->load->model('Payment_model');
     }
 
     /**
@@ -26,7 +27,9 @@ class Site extends CI_Controller {
         }
         # jika request berasal dari agent
         else if (2 == $this->session->userdata('type')) {
-            $this->load->view('agent-home');
+            $this->load->view('agent-home', [
+                'payments' => $this->Payment_model->getAll() 
+            ]);
         }
         # jika request berasal dari selainnya(pelanggan)
         else {

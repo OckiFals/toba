@@ -8,7 +8,14 @@ class Reservation_model extends CI_Model {
     }
     
     public function getByBookingCode($code) {
-        
+        return $this->db->query("SELECT P.*, R.`booking_code`, 
+            R.`customer_name`, R.`phone`, R.`status` 
+            FROM `payment` P 
+            INNER JOIN `reservation` R 
+                ON P.`reservation_id` = R.`id`
+            WHERE R.`booking_code` = ?",
+            [$code]
+        )->row();
     }
 
     public function create() {
@@ -37,7 +44,9 @@ class Reservation_model extends CI_Model {
     }
 
     public function validate() {
-        
+        $this->db->update('reservation', ['status' => 3], [
+            'booking_code' => $this->input->post('booking_code')
+        ]);
     }
 
     public function confirm() {

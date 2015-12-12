@@ -78,7 +78,18 @@ class Reservation extends CI_Controller {
             show_error('401 Unauthorized Request', 401 );
         
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
-
+            if ("search" === $this->input->post('action')) {
+                echo json_encode(
+                    $this->Reservation_model->getByBookingCode(
+                        $this->input->post('code')
+                    )
+                ); 
+            } else if ("validate" === $this->input->post('action')) {
+                $this->Reservation_model->validate();
+                echo "Pembayaran dengan kode booking <strong>" .
+                    $this->input->post('booking_code') .
+                    "</strong> telah divalidasi!";
+            }
         } else {
             $this->load->view('validate-payment');   
         }

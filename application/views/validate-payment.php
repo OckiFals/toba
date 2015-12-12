@@ -33,13 +33,27 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
+                            <!-- error message -->
+                            <div class="alert alert-danger alert-dismissable" id="error-message" style="display: none">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <h4><i class="icon fa fa-times"></i> Galat!</h4>
+                                Kode Booking tidak Valid!
+                            </div>
+                            <!-- /error message -->
+                            <!-- info message -->
+                            <div class="alert alert-info alert-dismissable" id="info-message" style="display: none">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <h4><i class="icon fa fa-check-square-o"></i> Info</h4>
+                                <span id="info-message-data"></span>
+                            </div>
+                            <!-- /info message -->
                             <div class="register-box-body">
                                 <form action="" method="POST" enctype="multipart/form-data" id="validate-form"
                                       novalidate="novalidate">
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-qrcode form-control-feedback"></span>
                                         <input id="booking-code" name="booking_code" class="form-control"
-                                               placeholder="Kode Booking" type="text">
+                                               placeholder="Kode Booking" type="text" value="<?php echo $this->input->get('code') ?>">
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-10">
@@ -54,7 +68,6 @@
                                         <!-- /.col -->
                                     </div>
                                 </form>
-
                                 <div id="payment-info" style="display: none;">
                                     <p class="lead">Data Pembayaran</p>
 
@@ -171,36 +184,31 @@
             </div>
         </div>
     </div>
-
-    <script type="application/javascript">
-        $('#confirm-validate').on('show.bs.modal', function (e) {
-            var button = $(e.relatedTarget); // Button that triggered the modal
-            var type = button.data('type-modal'); // Extract post id from data-name attribute
-            var id = button.data('order-id'); // Extract post id from data-name attribute
-            var title = button.data('order-name'); // Extract post id from data-name attribute
-
-            var modal = $(this);
-            modal.find('#order-id').text(id);
-            modal.find('#type-modal').text(type);
-            modal.find('#order-name').text(title);
-
-            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-        });
-    </script>
 </div>
 <!-- ./wrapper -->
 
 <script type="text/javascript">
     $(function () {
+        /**
+         * Kita ingin jika mengakses halaman ini langsung dengan mengklik salah satu info pembayaran 
+         * di halaman utama agent, seharusnya data tampil tanpa perlu mengklik lagi tombol submit 
+         */
+        if ('' !== document.getElementById("booking-code").value) {
+            // document.getElementById("validate-form").submit();
+        }
+
         //The Calender
         $("#calendar").datepicker('setDate', 'today');
 
         $("#booking-code").focus();
-        var btn_submit = $("#btn-submit");
+        var form = $("#validate-form");
         var payment_info = $("#payment-info");
         var load_animate = $("#load-animate");
+        var error_message = $('#error-message');
+        var info_message = $('#info-message');
+        var confirm_validate = $('#confirm-validate');
 
-        $("#validate-form").validate({
+        form.validate({
 
             // Specify the validation rules
             rules: {
@@ -213,22 +221,75 @@
             },
 
             submitHandler: function () {
-                btn_submit.hide();
                 load_animate.show();
 
-                window.setTimeout(function () {
-                    payment_info.find("#account-holder").text("Ujang Pengkol");
-                    payment_info.find("#time").text("Besok");
-                    payment_info.show();
-                    load_animate.hide();
-                }, 3000);
+                $.ajax({
+                    url: 'validation',
+                    type: "POST",
+                    data: {action: 'search', code: form.find("#booking-code").val()},
+                    beforeSend: function (xhr) {
+                        xhr.overrideMimeType("application/json; charset=x-user-defined");
+                    }
+                }).done(function (data) {
+                    if (null !== data) {
+                        form.find("#btn-submit").hide();
+                        window.setTimeout(function () {
+                            load_animate.hide();
+                            payment_info.find("#account-holder").text(data.account_holder);
+                            payment_info.find("#time").text(data.transfer_time);
+                            payment_info.show();
+                        }, 500);
+                    } else {
+                        load_animate.hide();
+                        error_message.show();
+                        window.setTimeout(function() {
+                            error_message.fadeOut('normal');
+                        }, 4000);
+                    }
+                });
             }
         });
 
         payment_info.find("#btn-cancel").click(function (e) {
             e.preventDefault();
             payment_info.hide();
-            btn_submit.show();
+            form.find("#booking-code").val('');
+            form.find("#btn-submit").show();
+        });
+
+        confirm_validate.on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget); // Button that triggered the modal
+            var type = button.data('type-modal'); // Extract post id from data-name attribute
+            var id = button.data('order-id'); // Extract post id from data-name attribute
+            var title = button.data('order-name'); // Extract post id from data-name attribute
+
+            var modal = $(this);
+            modal.find('#order-id').text(id);
+            modal.find('#type-modal').text(type);
+            modal.find('#order-name').text(title);
+        });
+
+        confirm_validate.find(".btn-ok").click(function() {
+            confirm_validate.modal('hide');
+            $.ajax({
+                url: 'validation',
+                type: "POST",
+                data: {action: 'validate', booking_code: form.find("#booking-code").val()},
+                beforeSend: function () {
+                    load_animate.show();
+                }
+            }).done(function (msg) {
+                window.setTimeout(function() {
+                    load_animate.hide();
+                    info_message.find("#info-message-data").html(msg);
+                    info_message.show();
+
+                    payment_info.find("#btn-cancel").click();
+                }, 500);
+                window.setTimeout(function() {
+                    info_message.fadeOut('normal');
+                }, 4000);
+            });
         });
     });
 </script>
