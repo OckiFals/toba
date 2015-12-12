@@ -25,6 +25,7 @@ class Reservation_model extends CI_Model {
         $booking_code = "{$bus_name}{$schedule->bus_id}-{$schedule->id}-{$reservation_id}";
         
         $data = array(
+            'po_id' => $schedule->po,
             'customer_name' => $this->input->post('customer_name'),
             'phone' => $this->input->post('customer_phone'),
             'booking_code' => $booking_code
