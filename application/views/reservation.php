@@ -37,13 +37,18 @@ if (empty($data))
                                 </h2>
                             </div>
                             <!-- /.box-header -->
-
+                            <!-- Loading Indicator -->
+                            <div class="overlay" id="load-animate" style="display: none">
+                                <i class="fa fa-refresh fa-spin"></i>
+                            </div>
+                            <!-- / Loading Indicator -->
                             <div class="box-body">
                                 <!-- flash message -->
                                 <div class="alert alert-info alert-dismissable" id="flash-message" style="display: none">
                                     <h4><i class="icon fa fa-check-square-o"></i> Pesanan telah dikirim!</h4>
                                     Kode booking Anda adalah <strong id="booking-code"></strong>.
-                                    Simpan baik-baik, dan segera lakukan pembayaran!
+                                    Simpan baik-baik, dan segera lakukan pembayaran! Anda juga dapat 
+                                    <a href="#print" id="btn-print">Mencetak</a> bukti pemesanan ini!
                                 </div>
                                 <!-- /flash message -->
                                 <div class="table-responsive">
@@ -227,7 +232,7 @@ if (empty($data))
                                         </div>
                                     </div>
                                 </form>
-                                <div class="row" id="div-done" style="display: none">
+                                <div class="row" id="print" style="display: none">
                                     <div class="col-xs-12">
                                         <button onclick="window.print()" class="btn btn-default">
                                             <i class="fa fa-print"></i> Print
@@ -270,6 +275,7 @@ if (empty($data))
         $(document).ready(function () {
             var form = $('#reservation_form');
             var ticket_count = form.find('#ticket_count');
+            var loading_indicator = $("#load-animate");
 
             ticket_count.change(function (e) {
                 var val = $(this).val();
@@ -355,24 +361,32 @@ if (empty($data))
                 $.post("pemesanan?q=<?php echo $this->input->get('q')?>", 
                     form.serialize()
                 ).done(function(msg) {
-                    // $( ".result" ).html( data );
-                    // alert(msg);
+                    loading_indicator.show();
                     
-                    // tampilkan informasi pesanan terkirim
-                    $("#flash-message").show().find("#booking-code").html(msg);
+                    // gunakan delay 0.5 detik sebagai variasi
+                    window.setTimeout(function () {
+                        loading_indicator.hide();
+                        // tampilkan informasi pesanan terkirim
+                        $("#flash-message").show().find("#booking-code").html(msg);
+                    }, 500);
 
                     $("#content-title").html("Informasi Pemesanan");
 
+                    $("html, body").animate({ scrollTop: 0 }, 400);
+
                     // tampilkan button tambahan
-                    $("#div-done").show();
+                    $("#print").show();
                     $("select").prop('disabled', true);
                     $("input").prop('disabled', true);
                     form.find("#form-submit-div").remove();
-                    // scroll dokumen ke atas
-                    $("body").animate({"scrollTop": "0px"}, 1000);
 
                 });
 
+            });
+
+            $("#btn-print").click(function (e) {
+                e.preventDefault();
+                $("html, body").animate({ scrollTop: $(document).height() }, 1000);
             });
 
             //Datemask dd/mm/yyyy
@@ -391,7 +405,7 @@ if (empty($data))
                 visibility: visible;
             }
 
-            #div-done * {
+            #print * {
                 visibility: hidden;
             }
         }
