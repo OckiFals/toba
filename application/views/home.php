@@ -47,16 +47,16 @@
                                         </div>
 
                                         <label class="radio-inline">
-                                            <input type="radio" name="type" value="semua" checked>Semua Kelas
+                                            <input type="radio" name="type" value="all" checked>Semua Kelas
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="type" value="eksekutif">Eksekutif
+                                            <input type="radio" name="type" value="1">Eksekutif
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="type" value="bisnis">Bisnis
+                                            <input type="radio" name="type" value="2">Bisnis
                                         </label>
                                         <label class="radio-inline">
-                                            <input type="radio" name="type" value="ekonomi">Ekonomi
+                                            <input type="radio" name="type" value="3">Ekonomi
                                         </label>
                                     </div>
                                 </form>

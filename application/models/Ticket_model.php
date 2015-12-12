@@ -3,14 +3,26 @@
 class Ticket_model extends CI_Model {
 
 	public function search($dest, $date, $class) {
-		return $this->db->query("SELECT B.*, S.`id` as schedule_id, S.`time` as schedule_time, 
-				D.`region` 
-			FROM `bus` B 
-				INNER JOIN `schedule` S 
-					ON B.`id` = S.`bus_id` 
-				INNER JOIN `destination` D 
-					ON B.`destination` = D.`alias` 
-            WHERE D.`region` = ? AND S.`time` LIKE '" . $this->db->escape_like_str($date) . "%'",
+		$sql = "SELECT B.*, S.`id` as schedule_id, S.`time` as schedule_time, 
+                D.`region` 
+            FROM `bus` B 
+                INNER JOIN `schedule` S 
+                    ON B.`id` = S.`bus_id` 
+                INNER JOIN `destination` D 
+                    ON B.`destination` = D.`alias` 
+            WHERE D.`region` = ? AND S.`time` LIKE '" . $this->db->escape_like_str($date) . "%'";
+
+        // jika filter class spesifik diminta 
+        if ("all" !== $class ) {
+            if ("1" === $class) 
+                $sql .= " AND B.`class` = 1";
+            else if ("2" === $class) 
+                $sql .= " AND B.`class` = 2";
+            else if ("3" === $class) 
+                $sql .= " AND B.`class` = 3";
+        }
+
+        return $this->db->query($sql,
             [$dest]
         )->result();
 	}
