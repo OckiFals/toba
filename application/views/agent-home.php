@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var array $payments
+ */
+?>
 <?php $this->load->view('header'); ?>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -48,46 +53,41 @@
                     </div>
 
                     <!-- TABLE: LATEST ORDERS -->
-                    <div class="box box-info">
+                    <div class="box box-info" style="min-height: 420px">
                         <div class="box-header">
-                            <h3 class="box-title">Latest Orders</h3>
+                            <h3 class="box-title">Konfirmasi Pembayaran Terbaru</h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="order-list" class="table table-bordered table-hover">
+                            <table id="payment-list" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
-                                    <th>Order ID</th>
-                                    <th>Table ID</th>
-                                    <th>Customer Name</th>
+                                    <th>ID Pemesanan</th>
+                                    <th>Kode Booking</th>
+                                    <th>Nama Pemesan</th>
+                                    <th>Waktu Transfer</th>
                                     <th>Status</th>
+                                    <th>Aksi</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <a href="#">15</a>
-                                    </td>
-                                    <td>
-                                        1
-                                    </td>
-                                    <td>
-                                        Obeng
-                                    </td>
-                                    <td>
-                                        <span class="label label-success">Done</span>
-                                    </td>
-                                </tr>
+                                <!-- js load soon -->
                                 </tbody>
                                 <tfoot>
                                 <tr>
-                                    <th>Order ID</th>
-                                    <th>Table ID</th>
-                                    <th>Customer Name</th>
+                                    <th>ID Pemesanan</th>
+                                    <th>Kode Booking</th>
+                                    <th>Nama Pemesan</th>
+                                    <th>Waktu Transfer</th>
                                     <th>Status</th>
+                                    <th>Aksi</th>
                                 </tr>
                                 </tfoot>
                             </table>
+                        </div>
+                        <!-- Loading Indicator -->
+                        <div class="overlay" id="load-animate">
+                            <i class="fa fa-refresh fa-spin"></i>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -146,27 +146,6 @@
                         <a href="#" class="small-box-footer">More info <i
                                 class="fa fa-arrow-circle-right"></i></a>
                     </div>
-
-
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Menus Popularity</h3>
-
-                            <div class="box-tools pull-right">
-                                <button class="btn btn-box-tool" data-widget="collapse"><i
-                                        class="fa fa-minus"></i>
-                                </button>
-                                <button class="btn btn-box-tool" data-widget="remove"><i
-                                        class="fa fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <canvas id="topTenChart" width="320" height="320"></canvas>
-                        </div>
-                        <!-- /.box-body -->
-                    </div>
                     <!-- /.box -->
                 </div>
                 <!-- /.row -->
@@ -201,17 +180,66 @@
 
     <script type="text/javascript">
         $(function () {
-            //The Calender
-            $("#calendar").datepicker('setDate', 'today');
-
-            $('#order-list').dataTable({
+            var payment_table = $('#payment-list').DataTable({
                 "bPaginate": true,
                 "bLengthChange": false,
                 "bFilter": false,
                 "bSort": true,
                 "bInfo": true,
-                "bAutoWidth": false
+                "bAutoWidth": false,
+                "order": [3, "dsc"]
             });
+            var load_indicator = $('#load-animate');
+
+            //The Calender
+            $("#calendar").datepicker('setDate', 'today');
+
+            // iterasi stdClass data ke dalam object javascript
+            var data = [
+                <?php foreach($payments as $index => $payment): ?>
+                {
+                    id: <?php echo "'{$payment->reservation_id}'" ?>,
+                    booking_code: <?php echo "'{$payment->booking_code}'" ?>,
+                    customer_name: <?php echo "'{$payment->customer_name}'" ?>,
+                    transfer_time: <?php echo "'{$payment->transfer_time}'" ?>,
+                    'status': <?php echo "'{$payment->status}'" ?>,
+                    status_display: <?php echo ('1' === $payment->status) ? 
+                        "'<span class=\"label label-default\">Baru</span>'" :
+                        (('2' === $payment->status) ? "'<span class=\"label label-primary\">Terkonfirmasi</span>'" : 
+                            "'<span class=\"label label-success\">Tervalidasi</span>'") ?>
+                },
+                <?php endforeach; ?>
+            ];
+
+            window.setTimeout(function () {
+                render_data(data);
+                load_indicator.remove();
+            }, 500);
+
+            function render_data(data) {
+                $.each(data, function (index, obj) {
+                    var action;
+
+                    if ('3' === obj.status) {
+                        action = ' <button class="btn btn-xs btn-flat btn-default" disabled> ' +
+                            ' <i class="fa fa-check"></i> Validasi ' +
+                        ' </button> ';
+                    } else {
+                        action = ' <a href="reservation/validation?code=' + obj.booking_code + '" class="btn btn-xs btn-flat btn-success"> ' +
+                            ' <i class="fa fa-check"></i> Validasi ' +
+                        ' </a> ';
+                    }
+
+                    payment_table.row.add([
+                        obj.id,
+                        obj.booking_code,
+                        obj.customer_name,
+                        obj.transfer_time,
+                        obj.status_display,
+                        action
+                    ]).draw();
+                });
+            }
 
             var sales = document.getElementById("salesChart").getContext("2d");
 
