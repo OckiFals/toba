@@ -251,7 +251,6 @@
                         xhr.overrideMimeType("application/json; charset=x-user-defined");
                     }
                 }).done(function(data) {
-                    console.log(data)
                     // parsing data pemesanan
                     payment_info.find("#customer_name").text(data[0].customer_name);
                     payment_info.find("#bus_name").text(data[0].bus_name);
