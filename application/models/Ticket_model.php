@@ -37,15 +37,28 @@ class Ticket_model extends CI_Model {
             'passenger_name' => $name,
             'identity_no' => $identity,
             'date_of_birth' => $birth,
-            'bus_id' => $this->input->get('q'),
+            'schedule_id' => $this->input->get('q'),
             'reservation_id' => $reservation->id
         );
 
         $this->db->insert('ticket', $data);
     }
 
-    public function getByCodeBooking($code) {
-        
+    public function getByBookingCode($code) {
+        return $this->db->query("SELECT T.*, R.`po_id`, R.`customer_name`, R.`phone`, R.`status`,
+            S.`time`, B.`bus_name`, B.`class`, B.`ticket_price`, D.`region` 
+            FROM `ticket` T 
+            INNER JOIN `reservation` R 
+                ON T.`reservation_id` = R.`id` 
+            INNER JOIN `schedule` S 
+                ON T.`schedule_id` = S.`id` 
+            INNER JOIN `bus` B 
+                ON S.`bus_id` = B.`id` 
+            INNER JOIN `destination` D 
+                ON B.`destination` = D.`alias` 
+            WHERE R.`booking_code` = ?",
+            [$code]
+        )->result();
     }
 
 }

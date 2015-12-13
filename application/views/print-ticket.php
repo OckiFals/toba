@@ -33,6 +33,19 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
+                            <!-- error message -->
+                            <div class="alert alert-danger alert-dismissable" id="error-message" style="display: none">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <h4><i class="icon fa fa-times"></i> Galat!</h4>
+                                Kode Booking tidak valid atau belum dilakukan pembayaran!
+                            </div>
+                            <!-- /error message -->
+                            <!-- info message -->
+                            <div class="alert alert-info alert-dismissable" id="info-message" style="display: none">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <h4><i class="icon fa fa-check-square-o"></i> Info</h4>
+                                Data ditemukan. Print dengan menekan tombol 'Cetak'!
+                            </div>
                             <div class="register-box-body">
                                 <form action="" method="POST" enctype="multipart/form-data" id="validate-form"
                                       novalidate="novalidate">
@@ -56,23 +69,46 @@
                                 </form>
 
                                 <div id="payment-info" style="display: none;">
-                                    <p class="lead">Data Pembayaran</p>
-
+                                    <p class="lead">Data Pemesanan</p>
                                     <div class="table-responsive">
                                         <table class="table" id="payment-table">
                                             <tbody>
                                             <tr>
-                                                <th style="width:50%">Pemilik Rekening:</th>
+                                                <th style="width:50%">Nama Pemesan:</th>
                                                 <td>
-                                                    <span id="account-holder">
+                                                    <span id="customer_name">
                                                         <!-- insert by AJAX call soon -->
                                                     </span>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th>Waktu Transfer:</th>
+                                                <th>Bus:</th>
+                                                <td>
+                                                    <span id="bus_name">
+                                                        <!-- insert by AJAX call soon -->
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Tujuan:</th>
+                                                <td>
+                                                    <span id="destination">
+                                                        <!-- insert by AJAX call soon -->
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Berangkat:</th>
                                                 <td>
                                                     <span id="time">
+                                                        <!-- insert by AJAX call soon -->
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Jumlah Tiket:</th>
+                                                <td>
+                                                    <span id="ticket_count">
                                                         <!-- insert by AJAX call soon -->
                                                     </span>
                                                 </td>
@@ -83,7 +119,7 @@
                                     <div class="row no-print">
                                         <div class="col-xs-12">
                                             <a href="#" class="btn btn-success pull-right" id="btn-confirm"
-                                               data-toggle="modal" data-target="#confirm-validate">
+                                               data-toggle="modal" data-target="#confirm-to-print">
                                                 <i class="fa fa-print"></i> Cetak
                                             </a>
                                             <button class="btn btn-default pull-right" style="margin-right: 5px;"
@@ -106,6 +142,7 @@
                         </div>
                         <!-- /.box-footer -->
                     </div>
+                        <div class="table-responsive" id="section-to-print" style="display: none; visibility: hidden"></div>
                     <!-- /.box -->
                 </div>
                 <!-- /.col -->
@@ -152,7 +189,7 @@
 
     <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>" type="text/javascript"></script>
 
-    <div class="modal fade" id="confirm-validate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    <div class="modal fade" id="confirm-to-print" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -171,36 +208,28 @@
             </div>
         </div>
     </div>
-
-    <script type="application/javascript">
-        $('#confirm-validate').on('show.bs.modal', function (e) {
-            var button = $(e.relatedTarget); // Button that triggered the modal
-            var type = button.data('type-modal'); // Extract post id from data-name attribute
-            var id = button.data('order-id'); // Extract post id from data-name attribute
-            var title = button.data('order-name'); // Extract post id from data-name attribute
-
-            var modal = $(this);
-            modal.find('#order-id').text(id);
-            modal.find('#type-modal').text(type);
-            modal.find('#order-name').text(title);
-
-            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-        });
-    </script>
-</div>
 <!-- ./wrapper -->
 
 <script type="text/javascript">
     $(function () {
+        var form = $("#validate-form");
         //The Calender
         $("#calendar").datepicker('setDate', 'today');
 
         $("#booking-code").focus();
+        // tombol submit
         var btn_submit = $("#btn-submit");
+        // tabel data pemesanan
         var payment_info = $("#payment-info");
+        // flash message error
+        var error_message = $('#error-message');
+        // flash message info
+        var info_message = $('#info-message');
         var load_animate = $("#load-animate");
+        var confirm_to_print = $('#confirm-to-print');
+        var section_to_print = $("#section-to-print");
 
-        $("#validate-form").validate({
+        form.validate({
 
             // Specify the validation rules
             rules: {
@@ -213,23 +242,130 @@
             },
 
             submitHandler: function () {
-                btn_submit.hide();
                 load_animate.show();
 
-                window.setTimeout(function () {
-                    payment_info.find("#account-holder").text("Ujang Pengkol");
-                    payment_info.find("#time").text("Besok");
+                $.ajax({
+                    url: '/toba/print-ticket',
+                    data: {booking_code: form.find("#booking-code").val()},
+                    beforeSend: function (xhr) {
+                        xhr.overrideMimeType("application/json; charset=x-user-defined");
+                    }
+                }).done(function(data) {
+                    console.log(data)
+                    // parsing data pemesanan
+                    payment_info.find("#customer_name").text(data[0].customer_name);
+                    payment_info.find("#bus_name").text(data[0].bus_name);
+                    payment_info.find("#destination").text(data[0].region);
+                    payment_info.find("#time").text(data[0].time);
+                    payment_info.find("#ticket_count").text(data.length);
+                    // tampilkan flash message info
+                    info_message.show();
+                    // hilangkan flash message info dengan delay 4 s
+                    window.setTimeout(function () {
+                        info_message.fadeOut('normal');
+                    }, 4000);
+                    // sembunyikan tombol submit
+                    btn_submit.hide();
+                    // tampilkan data pemesanan
                     payment_info.show();
-                    load_animate.hide();
-                }, 3000);
+
+                    print_ticket(data);
+                }).fail(function() {
+                    form.find("#booking-code").focus();
+                    error_message.show();
+                    window.setTimeout(function () {
+                        error_message.fadeOut('normal');
+                    }, 4000);
+                }).always(function() {
+                    window.setTimeout(function () {
+                        load_animate.hide();
+                    }, 500);
+                });
+
             }
         });
 
         payment_info.find("#btn-cancel").click(function (e) {
             e.preventDefault();
             payment_info.hide();
+            section_to_print.empty();
             btn_submit.show();
+            form.find("#booking-code").focus();
         });
+
+        confirm_to_print.on('show.bs.modal', function (e) {
+            var button = $(e.relatedTarget); // Button that triggered the modal
+            var type = button.data('type-modal'); // Extract post id from data-name attribute
+            var id = button.data('order-id'); // Extract post id from data-name attribute
+            var title = button.data('order-name'); // Extract post id from data-name attribute
+
+            var modal = $(this);
+            modal.find('#order-id').text(id);
+            modal.find('#type-modal').text(type);
+            modal.find('#order-name').text(title);
+
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+
+        confirm_to_print.find(".btn-ok").click(function() {
+            confirm_to_print.modal('hide');
+            section_to_print.show();
+            window.print();
+            section_to_print.hide();
+        });
+
+        function print_ticket(data) {
+            var content = '';
+            $.each(data, function (index, obj) {
+                content += '<table class="table">' +
+                    '<tbody>' +
+                        '<tr>' +
+                            '<th style="width:50%">Nama Penumpang:</th>' +
+                            '<td>' + obj.passenger_name +'</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                            '<th>Nomor Identitas:</th>' +
+                            '<td>' + obj.identity_no + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                            '<th>Tanggal Lahir:</th>' +
+                            '<td>' + obj.date_of_birth + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                            '<th>Bus:</th>' +
+                            '<td>' + obj.bus_name + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                            '<th>Tujuan:</th>' +
+                            '<td>' + obj.region + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                            '<th>Berangkat:</th>' +
+                            '<td>' + obj.time + '</td>' +
+                        '</tr>' +
+                    '</tbody>' +
+                '</table>';
+            });
+            // parsing content kedalam element
+            section_to_print.html(content);
+        }
     });
 </script>
+
+<style type="text/css">
+    @media print {
+        .content-header, .content-header *, .box-header, .box-header *, .box-body, .box-body *, footer, footer * {
+            visibility: hidden;
+            display: none;
+        }
+
+        .box-info {
+            border-top: none;
+        }
+
+        #section-to-print * {
+            visibility: visible;
+        }
+    }
+</style>
 <?php $this->load->view('footer'); ?>
