@@ -1,5 +1,5 @@
 <?php $this->load->view('header', ['title' => 'Cetak Tiket']); ?>
-<!-- Content Wrapper. Contains page content -->
+    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
@@ -27,7 +27,9 @@
             <div class="row">
                 <div class="col-md-8">
                     <!-- TABLE: LATEST ORDERS -->
-                    <div class="box box-info">
+
+
+                    <div class="box box-info hide-print">
                         <div class="box-header with-border">
                             <h3 class="box-title">Print Tiket</h3>
                         </div>
@@ -35,14 +37,16 @@
                         <div class="box-body">
                             <!-- error message -->
                             <div class="alert alert-danger alert-dismissable" id="error-message" style="display: none">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <button type="button" class="close" data-dismiss="alert"
+                                        aria-hidden="true">&times;</button>
                                 <h4><i class="icon fa fa-times"></i> Galat!</h4>
                                 Kode Booking tidak valid atau belum dilakukan pembayaran!
                             </div>
                             <!-- /error message -->
                             <!-- info message -->
                             <div class="alert alert-info alert-dismissable" id="info-message" style="display: none">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <button type="button" class="close" data-dismiss="alert"
+                                        aria-hidden="true">&times;</button>
                                 <h4><i class="icon fa fa-check-square-o"></i> Info</h4>
                                 Data ditemukan. Print dengan menekan tombol 'Cetak'!
                             </div>
@@ -60,7 +64,8 @@
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-xs-2">
-                                            <button type="submit" class="btn btn-primary btn-block btn-flat" id="btn-submit">
+                                            <button type="submit" class="btn btn-primary btn-block btn-flat"
+                                                    id="btn-submit">
                                                 <i class="fa fa-search"></i> Cari
                                             </button>
                                         </div>
@@ -70,6 +75,7 @@
 
                                 <div id="payment-info" style="display: none;">
                                     <p class="lead">Data Pemesanan</p>
+
                                     <div class="table-responsive">
                                         <table class="table" id="payment-table">
                                             <tbody>
@@ -129,7 +135,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <!-- /.table-responsive -->
                         </div>
@@ -142,11 +147,11 @@
                         </div>
                         <!-- /.box-footer -->
                     </div>
-                        <div class="table-responsive" id="section-to-print" style="display: none; visibility: hidden"></div>
+                    <div id="section-to-print" style="display: none; visibility: hidden"></div>
                     <!-- /.box -->
                 </div>
                 <!-- /.col -->
-                <div class="col-md-4">
+                <div class="col-md-4 hide-print">
                     <!-- Calendar -->
                     <div class="box box-solid bg-light-blue-gradient">
                         <div class="box-header">
@@ -185,9 +190,14 @@
     <!-- AdminLTE App -->
     <script src="<?php echo base_url('assets/dist/js/app.min.js') ?>" type="text/javascript"></script>
 
-    <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js') ?>"
+            type="text/javascript"></script>
 
-    <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>" type="text/javascript"></script>
+    <script src="<?php echo base_url('assets/plugins/validate/jquery.validate.min.js') ?>"
+            type="text/javascript"></script>
+
+    <script src="<?php echo base_url('assets/plugins/barcode/jquery-barcode.min.js') ?>"
+            type="text/javascript"></script>
 
     <div class="modal fade" id="confirm-to-print" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
@@ -208,163 +218,186 @@
             </div>
         </div>
     </div>
-<!-- ./wrapper -->
+    <!-- ./wrapper -->
 
-<script type="text/javascript">
-    $(function () {
-        var form = $("#validate-form");
-        //The Calender
-        $("#calendar").datepicker('setDate', 'today');
+    <script type="text/javascript">
+        $(function () {
+            var form = $("#validate-form");
+            //The Calender
+            $("#calendar").datepicker('setDate', 'today');
 
-        $("#booking-code").focus();
-        // tombol submit
-        var btn_submit = $("#btn-submit");
-        // tabel data pemesanan
-        var payment_info = $("#payment-info");
-        // flash message error
-        var error_message = $('#error-message');
-        // flash message info
-        var info_message = $('#info-message');
-        var load_animate = $("#load-animate");
-        var confirm_to_print = $('#confirm-to-print');
-        var section_to_print = $("#section-to-print");
+            $("#booking-code").focus();
+            // tombol submit
+            var btn_submit = $("#btn-submit");
+            // tabel data pemesanan
+            var payment_info = $("#payment-info");
+            // flash message error
+            var error_message = $('#error-message');
+            // flash message info
+            var info_message = $('#info-message');
+            var load_animate = $("#load-animate");
+            var confirm_to_print = $('#confirm-to-print');
+            var section_to_print = $("#section-to-print");
 
-        form.validate({
+            form.validate({
 
-            // Specify the validation rules
-            rules: {
-                booking_code: "required"
-            },
+                // Specify the validation rules
+                rules: {
+                    booking_code: "required"
+                },
 
-            // Specify the validation error messages
-            messages: {
-                booking_code: "Tolong ketikkan kode booking"
-            },
+                // Specify the validation error messages
+                messages: {
+                    booking_code: "Tolong ketikkan kode booking"
+                },
 
-            submitHandler: function () {
-                load_animate.show();
+                submitHandler: function () {
+                    load_animate.show();
 
-                $.ajax({
-                    url: '/toba/print-ticket',
-                    data: {booking_code: form.find("#booking-code").val()},
-                    beforeSend: function (xhr) {
-                        xhr.overrideMimeType("application/json; charset=x-user-defined");
-                    }
-                }).done(function(data) {
-                    // parsing data pemesanan
-                    payment_info.find("#customer_name").text(data[0].customer_name);
-                    payment_info.find("#bus_name").text(data[0].bus_name);
-                    payment_info.find("#destination").text(data[0].region);
-                    payment_info.find("#time").text(data[0].time);
-                    payment_info.find("#ticket_count").text(data.length);
-                    // tampilkan flash message info
-                    info_message.show();
-                    // hilangkan flash message info dengan delay 4 s
-                    window.setTimeout(function () {
-                        info_message.fadeOut('normal');
-                    }, 4000);
-                    // sembunyikan tombol submit
-                    btn_submit.hide();
-                    // tampilkan data pemesanan
-                    payment_info.show();
+                    $.ajax({
+                        url: '/toba/print-ticket',
+                        data: {booking_code: form.find("#booking-code").val()},
+                        beforeSend: function (xhr) {
+                            xhr.overrideMimeType("application/json; charset=x-user-defined");
+                        }
+                    }).done(function (data) {
+                        // parsing data pemesanan
+                        payment_info.find("#customer_name").text(data[0].customer_name);
+                        payment_info.find("#bus_name").text(data[0].bus_name);
+                        payment_info.find("#destination").text(data[0].region);
+                        payment_info.find("#time").text(data[0].time);
+                        payment_info.find("#ticket_count").text(data.length);
+                        // tampilkan flash message info
+                        info_message.show();
+                        // hilangkan flash message info dengan delay 4 s
+                        window.setTimeout(function () {
+                            info_message.fadeOut('normal');
+                        }, 4000);
+                        // sembunyikan tombol submit
+                        btn_submit.hide();
+                        // tampilkan data pemesanan
+                        payment_info.show();
 
-                    print_ticket(data);
-                }).fail(function() {
-                    form.find("#booking-code").focus();
-                    error_message.show();
-                    window.setTimeout(function () {
-                        error_message.fadeOut('normal');
-                    }, 4000);
-                }).always(function() {
-                    window.setTimeout(function () {
-                        load_animate.hide();
-                    }, 500);
+                        print_ticket(data);
+                    }).fail(function () {
+                        form.find("#booking-code").focus();
+                        error_message.show();
+                        window.setTimeout(function () {
+                            error_message.fadeOut('normal');
+                        }, 4000);
+                    }).always(function () {
+                        window.setTimeout(function () {
+                            load_animate.hide();
+                        }, 500);
+                    });
+
+                }
+            });
+
+            payment_info.find("#btn-cancel").click(function (e) {
+                e.preventDefault();
+                payment_info.hide();
+                section_to_print.empty();
+                btn_submit.show();
+                form.find("#booking-code").focus();
+            });
+
+            confirm_to_print.on('show.bs.modal', function (e) {
+                var button = $(e.relatedTarget); // Button that triggered the modal
+                var type = button.data('type-modal'); // Extract post id from data-name attribute
+                var id = button.data('order-id'); // Extract post id from data-name attribute
+                var title = button.data('order-name'); // Extract post id from data-name attribute
+
+                var modal = $(this);
+                modal.find('#order-id').text(id);
+                modal.find('#type-modal').text(type);
+                modal.find('#order-name').text(title);
+
+                $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+            });
+
+            confirm_to_print.find(".btn-ok").click(function () {
+                confirm_to_print.modal('hide');
+                section_to_print.show();
+                window.print();
+                section_to_print.hide();
+            });
+
+            function print_ticket(data) {
+                var content = '';
+                $.each(data, function (index, obj) {
+                    content += '<div class="box box-default box-solid">' +
+                        '<div class="box-header with-border"><h3 class="box-title">Tiket Bus Terminal Arjosati</h3>' +
+                        '<div class="box-tools pull-right"><i class="fa fa-ticket"></i></div>' +
+                        '</div>' +
+                        '<div class="box-body">' +
+                        '<div class="row">' +
+                        '<div class="col-xs-9">' +
+                        '<div class="table-responsive">' +
+                        '<table class="table">' +
+                        '<tbody>' +
+                        '<tr>' +
+                        '<th style="width:50%">Nama Penumpang:</th>' +
+                        '<td>' + obj.passenger_name + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<th>Nomor Identitas:</th>' +
+                        '<td>' + obj.identity_no + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<th>Tanggal Lahir:</th>' +
+                        '<td>' + obj.date_of_birth + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<th>Bus:</th>' +
+                        '<td>' + obj.bus_name + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<th>Tujuan:</th>' +
+                        '<td>' + obj.region + '</td>' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<th>Berangkat:</th>' +
+                        '<td>' + obj.time + '</td>' +
+                        '</tr>' +
+                        '</tbody>' +
+                        '</table>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="col-xs-3">' +
+                        '<div id="bcTarget-'+ index +'"></div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
                 });
-
+                // parsing content kedalam element
+                section_to_print.html(content);
+                // tambahkan barcode pada setiap tiket
+                for (var i = 0; i < data.length; i++) {
+                    section_to_print.find("#bcTarget-" + i).barcode({
+                            code: data[i].id, crc: false
+                        }, "int25", {barWidth: 2, barHeight: 30}
+                    );
+                }
             }
         });
+    </script>
 
-        payment_info.find("#btn-cancel").click(function (e) {
-            e.preventDefault();
-            payment_info.hide();
-            section_to_print.empty();
-            btn_submit.show();
-            form.find("#booking-code").focus();
-        });
+    <style type="text/css">
+        @media print {
+            .content-header, .content-header *, .hide-print, .hide-print *, footer, footer * {
+                visibility: hidden;
+                display: none;
+            }
 
-        confirm_to_print.on('show.bs.modal', function (e) {
-            var button = $(e.relatedTarget); // Button that triggered the modal
-            var type = button.data('type-modal'); // Extract post id from data-name attribute
-            var id = button.data('order-id'); // Extract post id from data-name attribute
-            var title = button.data('order-name'); // Extract post id from data-name attribute
+            .box-info {
+                border-top: none;
+            }
 
-            var modal = $(this);
-            modal.find('#order-id').text(id);
-            modal.find('#type-modal').text(type);
-            modal.find('#order-name').text(title);
-
-            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
-        });
-
-        confirm_to_print.find(".btn-ok").click(function() {
-            confirm_to_print.modal('hide');
-            section_to_print.show();
-            window.print();
-            section_to_print.hide();
-        });
-
-        function print_ticket(data) {
-            var content = '';
-            $.each(data, function (index, obj) {
-                content += '<table class="table">' +
-                    '<tbody>' +
-                        '<tr>' +
-                            '<th style="width:50%">Nama Penumpang:</th>' +
-                            '<td>' + obj.passenger_name +'</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                            '<th>Nomor Identitas:</th>' +
-                            '<td>' + obj.identity_no + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                            '<th>Tanggal Lahir:</th>' +
-                            '<td>' + obj.date_of_birth + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                            '<th>Bus:</th>' +
-                            '<td>' + obj.bus_name + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                            '<th>Tujuan:</th>' +
-                            '<td>' + obj.region + '</td>' +
-                        '</tr>' +
-                        '<tr>' +
-                            '<th>Berangkat:</th>' +
-                            '<td>' + obj.time + '</td>' +
-                        '</tr>' +
-                    '</tbody>' +
-                '</table>';
-            });
-            // parsing content kedalam element
-            section_to_print.html(content);
+            #section-to-print * {
+                visibility: visible;
+            }
         }
-    });
-</script>
-
-<style type="text/css">
-    @media print {
-        .content-header, .content-header *, .box-header, .box-header *, .box-body, .box-body *, footer, footer * {
-            visibility: hidden;
-            display: none;
-        }
-
-        .box-info {
-            border-top: none;
-        }
-
-        #section-to-print * {
-            visibility: visible;
-        }
-    }
-</style>
+    </style>
 <?php $this->load->view('footer'); ?>
