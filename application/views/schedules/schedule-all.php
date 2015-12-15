@@ -2,6 +2,7 @@
 /**
  * @var stdClass $schedules
  */
+date_default_timezone_set('Asia/Jakarta');
 ?>
 <?php $this->load->view('header', ['title' => 'Kelola Jadwal Bus']); ?>
 <!-- Content Wrapper. Contains page content -->
@@ -166,7 +167,7 @@
                 {
                     id: '<?php echo $schedule->id ?>',
                     name: '<?php echo $schedule->bus_name ?>',
-                    time: '<?php echo $schedule->time ?>'
+                    time: '<?php echo date("D, Y-m-d H:i:s", strtotime($schedule->time)) ?>'
                 },
                 <?php endforeach; ?>
             ];

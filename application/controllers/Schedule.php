@@ -52,7 +52,7 @@ class Schedule extends CI_Controller {
             $startDateSource = strtotime("next {$schedule_day[0]}");
             $startDate = date('Y-m-d', $startDateSource);
             # simpan 1 jadwal pertama dalam database
-            $this->Schedule_model->create(3, "{$startDate} {$schedule_time}");
+            $this->Schedule_model->create($bus, "{$startDate} {$schedule_time}");
             $dateNext = $startDateSource;
             $i = 0;
             for (; $i < 11; $i++) {
