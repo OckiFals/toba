@@ -11,6 +11,18 @@ class Payment_model extends CI_Model{
         $this->db->insert('payment', $data);
 	}
 
+    public function update() {
+        $data = array(
+            'account_holder' => $this->input->post('account_holder'),
+            'transfer_time' => $this->input->post('transfer_time')
+        );
+
+        # buat akun baru
+        $this->db->update('payment', $data, [
+            'reservation_id' => explode('-', $this->input->post('booking_code'))[2],
+        ]);
+    }
+
     public function getAll(){
         return $this->db->query("SELECT P.*, R.`booking_code`, 
             R.`customer_name`, R.`phone`, R.`status` 

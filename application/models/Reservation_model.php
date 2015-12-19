@@ -11,7 +11,7 @@ class Reservation_model extends CI_Model {
         return $this->db->query("SELECT P.*, R.`booking_code`, 
             R.`customer_name`, R.`phone`, R.`status` 
             FROM `payment` P 
-            INNER JOIN `reservation` R 
+            RIGHT JOIN `reservation` R 
                 ON P.`reservation_id` = R.`id`
             WHERE R.`booking_code` = ?",
             [$code]

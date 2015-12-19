@@ -62,11 +62,31 @@ class Reservation extends CI_Controller {
 
     }
     
+    /**
+     * Konfirmasi Pembayaran 
+     * ----------------------
+     * Untuk menghindari Pelanggan melakukan konfirmasi lebih dari satu
+     * Sebelum data disimpan, dilakukan pengecekan terlebih dahulu
+     * 1. Jika tidak ada data konfirmasi untuk kode booking tersebut
+     *    Simpan data konfirmasi baru
+     * 2. Jika data konfirmasi telah ada
+     *    Perbarui berdasarkan data input yang baru 
+     * @target: Pelanggan
+     * @method: GET, POST 
+     * @route: /konfirmasi-pembayaran
+     */
     public function confirmation() {
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
+            $data = $this->Reservation_model->getByBookingCode($this->input->post('booking_code'));
             # jika kode booking valid
-            if (null !== $this->Reservation_model->getByBookingCode($this->input->post('booking_code'))) {
-                $this->Payment_model->create();
+            if (null !== $data) {
+                # membuat data konfirmasi baru
+                if (null === $data->reservation_id) {
+                    $this->Payment_model->create();
+                } else { # ubah konfirmasi yang sudah ada
+                    $this->Payment_model->update();
+                }
+
                 $this->Reservation_model->confirm();
                 echo 'valid';
             } else {
