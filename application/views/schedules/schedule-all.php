@@ -189,7 +189,7 @@ date_default_timezone_set('Asia/Jakarta');
                         obj.time +
                         '</span>',
                         // col 5
-                        ' <a href="#" class="btn btn-xs btn-flat btn-primary"> ' +
+                        ' <a href="schedule/edit/' + obj.id + '" class="btn btn-xs btn-flat btn-primary"> ' +
                         ' <i class="fa fa-edit "></i> Ubah ' +
                         ' </a> ' + "\n" +
                         ' <a href="#" class="btn btn-xs btn-flat btn-danger" data-schedule-id="' + obj.id + '" ' +

@@ -47,7 +47,11 @@ class Schedule_model extends CI_Model {
     }
 
     public function update($id) {
-        
+        $data = array(
+            'time' => $this->input->post('time')
+        );
+
+        $this->db->update('schedule', $data, ['id' => $id]);
     }
 
     /**

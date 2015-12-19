@@ -61,7 +61,7 @@ class Schedule extends CI_Controller {
                 $dateNext = strtotime('+1 week', $dateNext);
             }
             # simpan info dalam session
-            $this->session->set_userdata('flash-message', 'Jadwal telah ditambahkan!');
+            $this->session->set_flashdata('flash-message', 'Jadwal telah ditambahkan!');
             # arahkan kembali ke /schedule
             redirect(base_url('schedule'), 'refresh');
         } else {
@@ -73,6 +73,17 @@ class Schedule extends CI_Controller {
 
     public function edit($id) {
         if (1 != $this->session->userdata('type')) show_error('401 Unauthorized Request', 401);
+
+        if ("POST" === $this->input->server('REQUEST_METHOD')) {
+            $this->Schedule_model->update($id);
+            # simpan info dalam session
+            $this->session->set_flashdata('flash-message', 'Jadwal telah dirubah!');
+            # arahkan kembali ke /schedule
+            redirect(base_url('schedule'));
+        } else {
+            $bus = $this->Schedule_model->getByPK($id);
+            $this->load->view('schedules/schedule-edit', ['bus' => $bus]);
+        }
     }
 
     public function delete($id) {
