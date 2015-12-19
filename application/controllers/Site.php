@@ -8,6 +8,8 @@ class Site extends CI_Controller {
         $this->load->model('Account_model');
         $this->load->model('Ticket_model');
         $this->load->model('Payment_model');
+        $this->load->model('Reservation_model');
+        $this->load->model('Po_model');
     }
 
     /**
@@ -27,14 +29,17 @@ class Site extends CI_Controller {
         }
         # jika request berasal dari agent
         else if (2 == $this->session->userdata('type')) {
-            $incomes = [];
+            $graphic_incomes = [];
             $data = $this->Payment_model->getByYear();
             for ($i=0; $i<count($data); $i++) {
-                $incomes[$data[$i]->month] = $data[$i]->count;
+                $graphic_incomes[$data[$i]->month] = $data[$i]->count;
             }
+
             $this->load->view('agent-home', [
                 'payments' => $this->Payment_model->getAll(),
-                'incomes' => $incomes
+                'graphic_incomes' => $graphic_incomes,
+                'total_income' => $this->Po_model->getIncomeThisMonth()->total_income,
+                'total_reservation' => count($this->Po_model->getReservations())
             ]);
         }
         # jika request berasal dari selainnya(pelanggan)
