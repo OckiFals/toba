@@ -1,7 +1,9 @@
 <?php
 /**
  * @var array $payments
- * @var array $incomes
+ * @var array $graphic_incomes
+ * @var array $total_income
+ * @var int $total_reservation
  */
 # set zona waktu lokal
 date_default_timezone_set('Asia/Jakarta');
@@ -125,9 +127,9 @@ date_default_timezone_set('Asia/Jakarta');
                     <!-- small box -->
                     <div class="small-box bg-aqua">
                         <div class="inner">
-                            <h3>13</h3>
+                            <h3><?php echo $total_reservation ?></h3>
 
-                            <p>Orders</p>
+                            <p>Reservasi</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
@@ -139,9 +141,9 @@ date_default_timezone_set('Asia/Jakarta');
                     <!-- small box -->
                     <div class="small-box bg-green">
                         <div class="inner">
-                            <h3>Rp. 1058.2K</h3>
+                            <h3>Rp. <?php echo $total_income ?></h3>
 
-                            <p>Totally Income</p>
+                            <p>Total Pendapatan Bulan Ini</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
@@ -271,7 +273,7 @@ date_default_timezone_set('Asia/Jakarta');
                         highlightStroke: "rgba(220,220,220,1)",
                         data: [
                             <?php for($i=1; $i<=12; $i++): ?>
-                                <?php echo (array_key_exists($i, $incomes)) ? $incomes[$i] : 0 ?>,
+                                <?php echo (array_key_exists($i, $graphic_incomes)) ? $graphic_incomes[$i] : 0 ?>,
                             <?php endfor; ?>
                         ]
                     }

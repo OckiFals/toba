@@ -1,4 +1,13 @@
-<?php $this->load->view('header', ['title' => 'Data Penjualan']); ?>
+<?php
+/**
+ * @var array $reservations
+ * @var array $graphic_incomes
+ * @var array $total_income
+ */
+# set zona waktu lokal
+date_default_timezone_set('Asia/Jakarta');
+?>
+<?php $this->load->view('header'); ?>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -30,7 +39,7 @@
                         <div class="box-header ui-sortable-handle">
                             <i class="fa fa-th"></i>
 
-                            <h3 class="box-title">Sales Graph 2015</h3>
+                            <h3 class="box-title">Sales Graph <?php echo date("Y"); ?></h3>
 
                             <div class="box-tools pull-right">
                                 <button class="btn bg-light-blue btn-sm" data-widget="collapse"><i
@@ -48,46 +57,40 @@
                     </div>
 
                     <!-- TABLE: LATEST ORDERS -->
-                    <div class="box box-info">
+                    <div class="box box-info" style="min-height: 420px">
                         <div class="box-header">
-                            <h3 class="box-title">Latest Orders</h3>
+                            <h3 class="box-title">Reservasi Terbaru</h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="order-list" class="table table-bordered table-hover">
+                            <table id="payment-list" class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
-                                    <th>Order ID</th>
-                                    <th>Table ID</th>
-                                    <th>Customer Name</th>
+                                    <th>ID Pemesanan</th>
+                                    <th>Kode Booking</th>
+                                    <th>Nama Pemesan</th>
                                     <th>Status</th>
+                                    <th>Jumlah Tiket</th>
+                                    <th>Total Harga</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <a href="#">15</a>
-                                    </td>
-                                    <td>
-                                        1
-                                    </td>
-                                    <td>
-                                        Obeng
-                                    </td>
-                                    <td>
-                                        <span class="label label-success">Done</span>
-                                    </td>
-                                </tr>
+                                <!-- js load soon -->
                                 </tbody>
                                 <tfoot>
                                 <tr>
-                                    <th>Order ID</th>
-                                    <th>Table ID</th>
-                                    <th>Customer Name</th>
+                                    <th>ID Pemesanan</th>
+                                    <th>Kode Booking</th>
+                                    <th>Nama Pemesan</th>
                                     <th>Status</th>
+                                    <th>Total Harga</th>
                                 </tr>
                                 </tfoot>
                             </table>
+                        </div>
+                        <!-- Loading Indicator -->
+                        <div class="overlay" id="load-animate">
+                            <i class="fa fa-refresh fa-spin"></i>
                         </div>
                         <!-- /.box-body -->
                     </div>
@@ -122,9 +125,9 @@
                     <!-- small box -->
                     <div class="small-box bg-aqua">
                         <div class="inner">
-                            <h3>13</h3>
+                            <h3><?php echo count($reservations) ?></h3>
 
-                            <p>Orders</p>
+                            <p>Reservasi</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
@@ -136,36 +139,15 @@
                     <!-- small box -->
                     <div class="small-box bg-green">
                         <div class="inner">
-                            <h3>Rp. 1058.2K</h3>
+                            <h3>Rp. <?php echo $total_income ?></h3>
 
-                            <p>Totally Income</p>
+                            <p>Total Pendapatan Bulan Ini</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
                         <a href="#" class="small-box-footer">More info <i
                                 class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-
-
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Menus Popularity</h3>
-
-                            <div class="box-tools pull-right">
-                                <button class="btn btn-box-tool" data-widget="collapse"><i
-                                        class="fa fa-minus"></i>
-                                </button>
-                                <button class="btn btn-box-tool" data-widget="remove"><i
-                                        class="fa fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <canvas id="topTenChart" width="320" height="320"></canvas>
-                        </div>
-                        <!-- /.box-body -->
                     </div>
                     <!-- /.box -->
                 </div>
@@ -201,10 +183,7 @@
 
     <script type="text/javascript">
         $(function () {
-            //The Calender
-            $("#calendar").datepicker('setDate', 'today');
-
-            $('#order-list').dataTable({
+            var payment_table = $('#payment-list').DataTable({
                 "bPaginate": true,
                 "bLengthChange": false,
                 "bFilter": false,
@@ -212,6 +191,45 @@
                 "bInfo": true,
                 "bAutoWidth": false
             });
+            var load_indicator = $('#load-animate');
+
+            //The Calender
+            $("#calendar").datepicker('setDate', 'today');
+
+            // iterasi stdClass data ke dalam object javascript
+            var data = [
+                <?php foreach($reservations as $index => $reservation): ?>
+                {
+                    id: <?php echo "'{$reservation->id}'" ?>,
+                    booking_code: <?php echo "'{$reservation->booking_code}'" ?>,
+                    customer_name: <?php echo "'{$reservation->customer_name}'" ?>,
+                    status_display: <?php echo ('1' === $reservation->status) ? 
+                        "'<span class=\"label label-default\">Baru</span>'" :
+                        (('2' === $reservation->status) ? "'<span class=\"label label-primary\">Terkonfirmasi</span>'" : 
+                            "'<span class=\"label label-success\">Tervalidasi</span>'") ?>,
+                    ticket_count: "<?php echo $reservation->ticket_count ?>",
+                    total_income: "<?php echo $reservation->total_income ?>"
+                },
+                <?php endforeach; ?>
+            ];
+
+            window.setTimeout(function () {
+                render_data(data);
+                load_indicator.remove();
+            }, 500);
+
+            function render_data(data) {
+                $.each(data, function (index, obj) {
+                    payment_table.row.add([
+                        obj.id,
+                        obj.booking_code,
+                        obj.customer_name,
+                        obj.status_display,
+                        obj.ticket_count,
+                        "Rp. " + obj.total_income
+                    ]).draw();
+                });
+            }
 
             var sales = document.getElementById("salesChart").getContext("2d");
 
@@ -239,7 +257,10 @@
                         highlightFill: "rgba(220,220,220,0.75)",
                         highlightStroke: "rgba(220,220,220,1)",
                         data: [
-                            0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0]
+                            <?php for($i=1; $i<=12; $i++): ?>
+                                <?php echo (array_key_exists($i, $graphic_incomes)) ? $graphic_incomes[$i] : 0 ?>,
+                            <?php endfor; ?>
+                        ]
                     }
                 ]
             };
