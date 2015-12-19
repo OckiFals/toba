@@ -66,6 +66,7 @@ class Site extends CI_Controller {
             # validasi akun
             if ((null !== $dataAccount) && 
                 (md5($this->input->post('password')) === $dataAccount['password'])) {
+                unset($dataAccount['password']);
                 # set data session sebagai tanda bahwa user telah ter otentifikasi
                 $this->session->set_userdata($dataAccount);
 
