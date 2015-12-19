@@ -27,6 +27,7 @@ class Site extends CI_Controller {
         }
         # jika request berasal dari agent
         else if (2 == $this->session->userdata('type')) {
+            $incomes = [];
             $data = $this->Payment_model->getByYear();
             for ($i=0; $i<count($data); $i++) {
                 $incomes[$data[$i]->month] = $data[$i]->count;

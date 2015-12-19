@@ -64,10 +64,15 @@ class Reservation extends CI_Controller {
     
     public function confirmation() {
         if ("POST" === $this->input->server('REQUEST_METHOD')) {
-            $this->Payment_model->create();
-            $this->Reservation_model->confirm();
+            # jika kode booking valid
+            if (null !== $this->Reservation_model->getByBookingCode($this->input->post('booking_code'))) {
+                $this->Payment_model->create();
+                $this->Reservation_model->confirm();
+                echo 'valid';
+            } else {
+                echo 'tidak-valid';
+            }
 
-            echo 'Konfirmasi telah dikirim!';
         } else {
             $this->load->view('payment-confirmation');
         }

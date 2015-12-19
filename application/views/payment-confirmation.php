@@ -27,13 +27,18 @@
                             <!-- /.box-header -->
 
                             <div class="box-body">
-                                <!-- flash message -->
-                                <div class="alert alert-info alert-dismissable" id="flash-message" style="display: none">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <!-- flash message info -->
+                                <div class="alert alert-info alert-dismissable" id="flash-message-info" style="display: none">
                                     <h4><i class="icon fa fa-check-square-o"></i> Info!</h4>
-                                    <span id="flash-message-data"></span>
+                                    <span id="flash-message-info-data"></span>
                                 </div>
-                                <!-- /flash message -->
+                                <!-- /flash message info -->
+                                <!-- flash message alert -->
+                                <div class="alert alert-danger alert-dismissable" id="flash-message-alert" style="display: none">
+                                    <h4><i class="icon fa fa-check-square-o"></i> Galat!</h4>
+                                    <span id="flash-message-alert-data">Kode booking tidak valid!</span>
+                                </div>
+                                <!-- /flash message alert -->
                                 <form role="form" action="" method="POST" id="confirmation-form" novalidate="novalidate">
                                     <div class="box-body">
                                         <div class="form-group">
@@ -102,7 +107,8 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var loading_indicator = $("#load-animate");
-        var flash_message = $("#flash-message");
+        var flash_message_info = $("#flash-message-info");
+        var flash_message_alert = $("#flash-message-alert");
 
         $('#transfer_time').datetimepicker({
             minDate:'-1970/01/02',
@@ -121,19 +127,30 @@
                 transfer_time: "Tolong isi dengan waktu transfer"
             },
             submitHandler: function (form) {
+                flash_message_info.hide();
+                flash_message_alert.hide();    
                 loading_indicator.show();
 
                 $.post("konfirmasi-pembayaran",
                     $("#confirmation-form").serialize()
                 ).done(function(msg) {
-                    window.setTimeout(function () {
-                        loading_indicator.hide();
-                        flash_message.show().find("#flash-message-data").html(msg);
-                    }, 500);
-                    // sembunyikan button konfirmasi
-                    $("#btn-confirm").hide();
-                    $("#btn-back").show();
-                    $("input").prop("disabled", true);
+                    if ("\nvalid" == msg) {
+                        console.log(msg);
+                        window.setTimeout(function () {
+                            loading_indicator.hide();
+                            flash_message_info.show().find("#flash-message-info-data").html('Konfirmasi telah dikirim!');
+                        }, 500);
+                        // sembunyikan button konfirmasi
+                        $("#btn-confirm").hide();
+                        $("#btn-back").show();
+                        $("input").prop("disabled", true);
+                    } else {
+                        flash_message_alert.show();
+                        window.setTimeout(function () {
+                            loading_indicator.hide();
+                            flash_message_alert.show();
+                        }, 500);
+                    }
                 });
             }
         });
