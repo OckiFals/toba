@@ -27,8 +27,13 @@ class Site extends CI_Controller {
         }
         # jika request berasal dari agent
         else if (2 == $this->session->userdata('type')) {
+            $data = $this->Payment_model->getByYear();
+            for ($i=0; $i<count($data); $i++) {
+                $incomes[$data[$i]->month] = $data[$i]->count;
+            }
             $this->load->view('agent-home', [
-                'payments' => $this->Payment_model->getAll() 
+                'payments' => $this->Payment_model->getAll(),
+                'incomes' => $incomes
             ]);
         }
         # jika request berasal dari selainnya(pelanggan)
@@ -120,9 +125,5 @@ class Site extends CI_Controller {
         sleep(1);
 
         echo json_encode($data);
-    }
-
-    public function search2() {
-        
     }
 }

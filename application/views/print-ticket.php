@@ -27,8 +27,6 @@
             <div class="row">
                 <div class="col-md-8">
                     <!-- TABLE: LATEST ORDERS -->
-
-
                     <div class="box box-info hide-print">
                         <div class="box-header with-border">
                             <h3 class="box-title">Print Tiket</h3>
@@ -72,7 +70,6 @@
                                         <!-- /.col -->
                                     </div>
                                 </form>
-
                                 <div id="payment-info" style="display: none;">
                                     <p class="lead">Data Pemesanan</p>
 

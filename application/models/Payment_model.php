@@ -24,8 +24,16 @@ class Payment_model extends CI_Model{
     }
 
     public function getByYear(){
-        
+        return $this->db->query("SELECT MONTH(`transfer_time`) as month, COUNT(*) as `count` 
+            FROM `reservation` R 
+            INNER JOIN `payment` P 
+                ON R.`id` = P.`reservation_id` 
+            WHERE R.`status` = 3 
+                AND YEAR(`transfer_time`) = YEAR(CURRENT_TIMESTAMP)
+            GROUP BY MONTH(`transfer_time`)"
+        )->result();
     }
+
     public function getByMonth(){
         
     }

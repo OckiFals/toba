@@ -1,7 +1,10 @@
 <?php
 /**
  * @var array $payments
+ * @var array $incomes
  */
+# set zona waktu lokal
+date_default_timezone_set('Asia/Jakarta');
 ?>
 <?php $this->load->view('header'); ?>
     <!-- Content Wrapper. Contains page content -->
@@ -35,7 +38,7 @@
                         <div class="box-header ui-sortable-handle">
                             <i class="fa fa-th"></i>
 
-                            <h3 class="box-title">Sales Graph 2015</h3>
+                            <h3 class="box-title">Sales Graph <?php echo date("Y"); ?></h3>
 
                             <div class="box-tools pull-right">
                                 <button class="btn bg-light-blue btn-sm" data-widget="collapse"><i
@@ -267,7 +270,10 @@
                         highlightFill: "rgba(220,220,220,0.75)",
                         highlightStroke: "rgba(220,220,220,1)",
                         data: [
-                            0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0]
+                            <?php for($i=1; $i<=12; $i++): ?>
+                                <?php echo (array_key_exists($i, $incomes)) ? $incomes[$i] : 0 ?>,
+                            <?php endfor; ?>
+                        ]
                     }
                 ]
             };
