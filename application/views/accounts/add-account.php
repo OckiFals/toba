@@ -177,7 +177,8 @@
                     },
                     password2: {
                         required: true,
-                        minlength: 5
+                        minlength: 5,
+                        equalTo: '#password'
                     },
                     type: {
                         required: true
@@ -194,7 +195,8 @@
                     },
                     password2: {
                         required: "Tolong ketikan password",
-                        minlength: "Password setidaknya berisi 5 karakter"
+                        minlength: "Password setidaknya berisi 5 karakter",
+                        equalTo: "Tidak cocok"
                     },
                     type: "Tolong pilih tipe akun"
                 },
