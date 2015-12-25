@@ -40,7 +40,7 @@ date_default_timezone_set('Asia/Jakarta');
                         <div class="box-header ui-sortable-handle">
                             <i class="fa fa-th"></i>
 
-                            <h3 class="box-title">Sales Graph <?php echo date("Y"); ?></h3>
+                            <h3 class="box-title">Grafik Penjualan Tiket <?php echo date("Y"); ?></h3>
 
                             <div class="box-tools pull-right">
                                 <button class="btn bg-light-blue btn-sm" data-widget="collapse"><i

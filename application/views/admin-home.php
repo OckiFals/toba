@@ -1,3 +1,7 @@
+<?php 
+# set zona waktu lokal
+date_default_timezone_set('Asia/Jakarta');
+?>
 <?php $this->load->view('header'); ?>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -30,7 +34,7 @@
                         <div class="box-header ui-sortable-handle">
                             <i class="fa fa-th"></i>
 
-                            <h3 class="box-title">Sales Graph 2015</h3>
+                            <h3 class="box-title">Grafik Penjualan Tiket <?php echo date("Y"); ?></h3>
 
                             <div class="box-tools pull-right">
                                 <button class="btn bg-light-blue btn-sm" data-widget="collapse"><i
@@ -145,27 +149,6 @@
                         </div>
                         <a href="#" class="small-box-footer">More info <i
                                 class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-
-
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Menus Popularity</h3>
-
-                            <div class="box-tools pull-right">
-                                <button class="btn btn-box-tool" data-widget="collapse"><i
-                                        class="fa fa-minus"></i>
-                                </button>
-                                <button class="btn btn-box-tool" data-widget="remove"><i
-                                        class="fa fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <canvas id="topTenChart" width="320" height="320"></canvas>
-                        </div>
-                        <!-- /.box-body -->
                     </div>
                     <!-- /.box -->
                 </div>
