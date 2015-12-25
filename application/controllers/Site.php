@@ -100,7 +100,6 @@ class Site extends CI_Controller {
         $this->session->unset_userdata([
             'id' => '',
             'name' => '',
-            'password' => '',
             'type' => '',
             'created_at' => ''
         ]);

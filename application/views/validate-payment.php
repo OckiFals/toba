@@ -62,7 +62,7 @@
                                         <!-- /.col -->
                                         <div class="col-xs-2">
                                             <button type="submit" class="btn btn-primary btn-block btn-flat" id="btn-submit">
-                                                Submit
+                                                Cari
                                             </button>
                                         </div>
                                         <!-- /.col -->
