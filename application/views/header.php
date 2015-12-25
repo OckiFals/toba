@@ -68,7 +68,7 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                    
                                 </div>
                                 <div class="pull-right">
                                     <a href="<?php echo base_url('logout-rahasia') ?>"
@@ -99,18 +99,6 @@
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
-            <!-- search form -->
-            <form action="#" method="get" class="sidebar-form">
-                <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Cari..." disabled/>
-                        <span class="input-group-btn">
-                            <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i
-                                    class="fa fa-search"></i>
-                            </button>
-                        </span>
-                </div>
-            </form>
-            <!-- /.search form -->
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
                 <li class="header">NAVIGASI UTAMA</li>
@@ -121,16 +109,6 @@
                 </li>
                 <?php if (1 == $this->session->userdata('type')): ?>
                     <!-- menu untuk admin -->
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-files-o"></i>
-                            <span>Data Penjualan Contoh</span>
-                            <span class="label label-primary pull-right">4</span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="#"><i class="fa fa-circle-o"></i> Contoh</a></li>
-                        </ul>
-                    </li>
                     <li class="treeview <?php if (strpos($title, 'Akun')) echo 'active'?>">
                         <a href="#">
                             <i class="fa fa-users"></i>
