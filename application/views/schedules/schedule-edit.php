@@ -40,7 +40,7 @@
                         <!-- /.box-header -->
                         <div class="box-body">
                             <div class="register-box-body">
-                                <form action="" method="POST" enctype="multipart/form-data" id="bus-form"
+                                <form action="" method="POST" enctype="multipart/form-data" id="update-form"
                                       novalidate="novalidate">
                                     <div class="form-group has-feedback">
                                         <span class="glyphicon glyphicon-road form-control-feedback"></span>
@@ -60,11 +60,18 @@
                                         </div>
                                         <!-- /.col -->
                                         <div class="col-xs-4">
-                                            <button type="submit" class="btn btn-primary btn-block btn-flat">Ubah
+                                            <button type="submit" class="btn btn-primary btn-block btn-flat"
+                                            id="btn-update"
+                                            data-account-id="<?php echo $bus->id ?>"
+                                            data-type-modal="Jadwal"
+                                            data-account-name="<?php echo $bus->bus_name ?>"
+                                            data-href=""
+                                            data-toggle="modal">
+                                            Ubah
                                             </button>
                                         </div>
-                                        <!-- /.col -->
-                                    </div>
+                                    <!-- /.col -->
+                                </div>
                                 </form>
                             </div>
                             <!-- /.table-responsive -->
@@ -110,14 +117,26 @@
     </div>
     <!-- /.content-wrapper -->
 
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <a>Made By <i>Ngaji 2.0, AngularJS</i> and <i class="fa fa-heart"></i></a>
+    <div class="modal fade" id="confirm-update" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Konfirmasi Ubah</h4>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin untuk mengubah <span id="type-modal"> </span>
+                    <strong id="order-name"> </strong> dengan #id=<span id="order-id"> </span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Batal</button>
+                    <button class="btn btn-danger btn-flat btn-ok" id="btn-confirm">Ubah</button>
+                </div>
+            </div>
         </div>
-        <strong>Copyright &copy;<a>OckiFals</a>.</strong> All
-        rights reserved.
-        <!-- /.container -->
-    </footer>
+    </div>
 
     <!-- jQuery 2.1.3 -->
     <script src="<?php echo base_url('assets/plugins/jQuery/jQuery-2.1.3.min.js') ?>" type="text/javascript"></script>
@@ -138,6 +157,12 @@
 
     <script type="application/javascript">
         $(document).ready(function () {
+            // The modal
+            var confirm_modal = $('#confirm-update');
+            // button update
+            var btn_update = $('#btn-update');
+            // the form
+            var form = $("#update-form");
             //The Calender
             $("#calendar").datepicker('setDate', 'today');
 
@@ -146,7 +171,7 @@
                 formatDate:'Y-m-d H:i'
             });
 
-            $("#bus-form").validate({
+            form.validate({
 
                 // Specify the validation rules
                 rules: {
@@ -161,8 +186,24 @@
                 },
 
                 submitHandler: function (form) {
-                    form.submit();
+                    confirm_modal.modal('show');
                 }
+            });
+
+            confirm_modal.on('show.bs.modal', function () {
+                var type = btn_update.data('type-modal');
+                var id = btn_update.data('account-id');
+                var title = btn_update.data('account-name');
+
+                var modal = $(this);
+                modal.find('#order-id').text(id);
+                modal.find('#type-modal').text(type);
+                modal.find('#order-name').text(title);
+            });
+
+            confirm_modal.find('.btn-ok').click(function (e) {
+                // TODO kenapa harus native?
+                document.getElementById("update-form").submit();
             });
         });
     </script>

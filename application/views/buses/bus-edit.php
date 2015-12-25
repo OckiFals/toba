@@ -102,7 +102,7 @@
                                             <button type="submit" class="btn btn-primary btn-block btn-flat"
                                                 id="btn-update"
                                                 data-bus-id="<?php echo $bus->id; ?>"
-                                                data-type-modal="User"
+                                                data-type-modal="Bus"
                                                 data-bus-name="<?php echo $bus->bus_name; ?>"
                                                 data-href=""
                                                 data-toggle="modal">
